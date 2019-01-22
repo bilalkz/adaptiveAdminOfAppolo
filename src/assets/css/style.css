@@ -1,0 +1,86 @@
+.mlr10{
+    margin:0 10px;
+}
+
+.flexDisplay{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+.headerTop{
+    font-size: 28px;
+    color: #3e4956;
+    font-weight: 500;
+    margin: 0 0 20px 0
+}
+button.customMade{
+    font-size: 14px;
+    height: 40px;
+    padding: 9px 12px;
+}
+.datePickerDisplay{
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.pagecontent.tableActivityURL .table-responsive{
+    height:calc(100vh - 230px);
+    overflow:auto
+}
+
+.dashboardTable .table-responsive{
+    max-height:185px;
+    overflow:auto
+}
+.dashboardTable .table{
+    margin-bottom:0 !important;
+}
+
+.dashboardTable .card-body{
+    padding:0 15px 0 15px !important;    
+}
+.dashboardTable .card-footer{
+    padding:0 1.25rem 0.75rem 1.25rem !important;
+}
+.projectLetter{
+    display: inline-block;
+    text-align: center;
+    font-size: 14px;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 50%;
+    color: #fff;
+    font-weight: 500;
+}
+.displayContents{
+    display:contents;
+}
+.percentTagImageTop{
+    position: absolute;
+    top: -6px;
+    right: 9px;
+    z-index: 2;
+    padding:2px 8px;
+    border-radius: 10px;
+    color:#fff;
+    font-weight: 600;
+}
+.shotBody{
+    position: relative;
+    overflow: hidden;
+    padding-bottom: 56.17%;
+}
+
+.dashboardTable.tableBigHeight .table-responsive{
+    max-height:350px !important;
+}
+@media only screen and (max-width: 767px) {
+    .btn + .btn, .btn-group + .btn-group{
+        margin-left: 0 !important;
+    }
+    .datePickerDisplay{
+        display: inherit;
+        margin: auto;
+    }
+}

@@ -1,0 +1,182 @@
+::::::::Remaining Tasks:::::::
+
+UI:::::::
+==
+
+1- Registration: Done
+2- Login: Done
+3- Forgot password: Done
+4- Invite user confirmation: Done
+5- Reset password: Done
+6- Change password: Done
+7- Notification: Done
+8- Activity module as per hubstaff design: Done
+9- Timesheet module as per hubstaff design: Done
+
+Pending:
+1- Reports module
+2- Projects module
+3- Tasks module
+4- Invoices module
+5- BillPayment module
+6- Schedule module
+7- Organisation module
+
+
+
+---------------------------------------------------------------------------------------
+
+Functionalities:::::
+====================
+
+Authentication & Registration Module
+====================================
+
+Completed:
+F1 
+F2
+F4
+F5
+F6
+F7
+F8
+F10
+
+Pending:
+F3 (As asked by Sharafat to remove the social icons)
+F9 (In discussion with Asad to make some changes )
+
+Organization-Client Module
+==========================
+
+Completed:
+None
+
+Pending:
+F1
+F2
+F3
+F5
+F6
+F7
+F8
+F9
+F10
+F11
+F12
+F13
+F14
+F15
+
+Project Management Module
+==========================
+
+Completed:
+F1
+F2
+F3
+
+Pending:
+F4
+F5
+F6
+F7
+F8
+F9
+F10
+F11
+F12
+F13
+F14
+F15
+F16
+F17
+F18
+F19
+F20
+F21
+
+Scheduling Module
+=================
+
+Completed:
+None
+
+Pending:
+F1
+F2
+F3
+F5
+F6
+
+BillPayment module
+==================
+
+Completed:
+None
+
+Pending:
+F1
+F2
+
+Activity module
+===============
+
+Completed:
+None
+
+Pending:
+F1
+F2
+F3
+F4
+F5
+F6
+
+Report Module
+=============
+
+Completed:
+None
+
+Pending:
+F1  
+F2
+F3
+F4
+F5
+F6
+F7
+F8
+F9
+F10
+F11
+F12
+F13
+F14
+F15
+
+Invoice Module
+==============
+
+Completed:
+None
+
+Pending:
+F1  
+F2
+
+Internal Tasks/Utility
+======================
+
+Completed:
+None
+
+Pending:
+F1  
+F2
+F3
+F4
+
+
+

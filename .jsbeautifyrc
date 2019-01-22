@@ -1,0 +1,25 @@
+{
+    "beautify.language": {
+        "js": {
+          "type": ["javascript", "json"],
+          "filename": [".jshintrc", ".jsbeautifyrc"]
+        },
+        "css": ["css", "scss"],
+        "html": ["htm", "html"]
+      },
+    "indent_size": 4,
+  "indent_char": " ",
+  "css": {
+    "indent_size": 2
+  },
+    "eol"	: "files.eol",
+"tab_size" :	"editor.tabSize",
+"indent_with_tabs":	true,
+"indent_inner_html":	true,
+"preserve_newlines":	true,
+"indent_handlebars":	true,
+"end_with_newline":	true,
+"space_after_anon_function":	true,
+"space_in_paren":	true,
+"editor.formatOnSave":true
+}

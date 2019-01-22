@@ -1,0 +1,32 @@
+img{
+    max-width: 100%;
+    border-radius: $border-radius-small;
+}
+
+
+
+
+
+.login-lefts{
+    width: 900px;
+    height: 100%;
+    border: none
+}
+.login-right{
+    margin-top: 188px;
+
+}
+.login-img{
+    height: 100%; 
+    width: 100%;
+    margin:auto;
+    display:block;
+    display: inline-block;
+    vertical-align: middle;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.img-raised{
+    box-shadow: $box-shadow-raised;
+}

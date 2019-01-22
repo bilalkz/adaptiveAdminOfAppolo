@@ -1,0 +1,363 @@
+//Body
+body{
+    font-size: 12px !important;
+}
+
+// login and register stying for short time 
+.link-color{
+ color: blue  !important;
+ margin-left:5px !important;
+ margin-top: 30px;
+
+}
+.link-register{
+    color:#66615B;
+    font-size: 17px;
+}
+.fontAwesome {
+    font-family: Helvetica, 'FontAwesome', sans-serif;
+  }
+
+
+.login-button{
+    background:linear-gradient(to right,  #33ccae 0%, #00a99d 100%);
+    height:49px;
+    font-size: 20px;
+    font-family: Myriad Pro-Regular;
+
+}
+.register-button{
+    background:linear-gradient(to right,  #33ccae 0%, #00a99d 100%);
+    height:60px;
+    font-size: 20px;
+    font-family: Myriad Pro-Regular;
+}
+
+select {
+    background-color: #0082D8;
+    height:100px;
+
+}
+
+//Custom button style
+
+.buttonStyle{
+    background-color:#109c88
+}
+
+.link-forgot
+{
+    margin-bottom: 20px !important;
+    color: rgb(167, 161, 161) !important;
+    font-family: Myriad Pro-Regular;
+
+}
+.list_button
+{
+    width: 10px;
+    height: 10px;
+
+}
+
+@media (max-width: 1200px) {
+    #leftImg{
+        display: none !important;
+    }
+
+}
+.register{
+    margin-top: 20px;
+}
+
+// .inputLogin{
+//    background-color: #66615B;
+// }
+
+.loginRight{
+    width: 493PX;
+    height: 300px;
+    margin-left: 100px;
+    margin-top: 162px;
+}
+//sidebar no horizontal scroll
+.sidebar .nav li > a{
+    margin: 0px 17px 0 !important;
+}
+
+.copyright{
+    color: white !important;
+}
+
+.custom-loader .modal-content{
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+.custom-loader .modal-body{
+    align-self: center !important;
+}
+
+//common
+.remove-default-mt{
+    margin-top: 0px !important;
+}
+
+.remove-default-mb{
+    margin-bottom: 0px !important;
+}
+
+.remove-default-uppercase{
+    text-transform: none !important;
+}
+
+.replace-border-primary{
+    border: 1px solid #51cbce !important;
+}
+
+.replace-border-default{
+    border: 1px solid #66615B !important;
+}
+
+.mt-10{
+    margin-top: 10px;
+}
+
+.mt-20{
+    margin-top: 20px;
+}
+
+.mb-10{
+    margin-bottom: 10px;
+}
+
+.ml-10{
+    margin-left: 10px;
+}
+
+.mr-10{
+    margin-right: 10px;
+}
+
+.span-mr-5{
+    margin-right: 5px;
+}
+
+.font-bold .modal-title, .font-bold{
+    font-weight:bold !important;
+}
+
+textarea.form-control{
+    padding:5px 10px !important;
+}
+
+.red-error{
+    color: red !important;
+}
+
+.table-status-style{
+    padding:5px 10px;
+    color:white;
+    border-radius:2px;
+}
+
+.table-header-style{
+    font-size:10px;
+}
+
+
+//Activity screenshot
+.span-screenshot-ml{
+    color: #0082D8;
+    margin-left: 5px
+}
+
+.span-screenshot-ml:hover{
+    color: blue;
+    cursor: pointer;
+}
+
+.icon-screenshot-mr{
+    margin-right: 5px
+}
+
+.total-hours{
+    color: #0082D8;
+}
+
+.total-hours-text{
+    color: #8F9FAE;
+}
+
+.get-started-modal .modal-body{
+    padding: 20px 30px !important;
+    
+}
+
+.get-started-modal{
+    max-width: 600px !important;
+}
+
+.gray-color{
+    color:#A8B5C0;
+}
+
+//Activity Apps
+.project-data-table{
+    margin-top: 25px;
+}
+
+//Timesheet Daily
+.hideText{
+    visibility: hidden;
+}
+
+// .today-button-mt{
+//     margin-top: 58px !important;
+// }
+
+.time_picker
+{
+    width: 300px;
+    border: none;
+    height: 47px;
+    background-color: #e9edf4;
+    margin-left:5px;
+    margin-top:20px;
+
+}
+.button-time
+{
+    margin-top:45px;
+    width:90px;
+    padding: 0px;
+    height: 47px;
+    font-size:14px;
+    margin-left:10px
+
+}
+.button-add{
+    margin-top:45px;
+    width:175px;
+    padding: 0px;
+    height: 47px;
+    font-size:14px;
+    margin-left:10px
+}
+
+@media(max-width:400px) {
+    .time_picker
+{
+    width: 190px;
+    border: none;
+    height: 47px;
+    background-color: #e9edf4;
+}
+.button-time
+{
+    width:65px;
+    text-align:center;
+    font-size:10px;
+
+}
+.button-add{
+    width:78px;
+    text-align:center;
+    font-size:10px;
+
+}
+
+.rdt.rdtOpen .rdtPicker {
+    opacity: 1;
+    visibility: visible;
+    margin-top: 29px !important;
+    width: 209px !important;
+  }
+}
+
+
+
+.rdt.rdtOpen .rdtPicker {
+    opacity: 1;
+    visibility: visible;
+    margin-top: 29px !important;
+    width: 306px;
+  }
+.span-timesheet-daily{
+    color: #0082D8
+}
+
+.span-timesheet-daily:hover{
+    color: blue;
+    cursor: pointer;
+}
+
+//Timesheet weekly
+.today-button-mt-weekly{
+    margin-top: 28px !important;
+}
+
+.add-time-modal{
+    max-width: 750px !important;
+}
+
+.add-time-modal .modal-body{
+    padding: 20px 30px !important;
+    
+}
+
+.add-time-modal .close, .add-project-modal .close{
+    margin-top: -45px !important;
+    
+}
+
+.add-time-footer{
+    padding:5px 15px !important;
+}
+
+//allNotes-modal
+
+.allNotes-modal{
+    max-width: 1050px !important;
+}
+
+.allNotes-modal .modal-body{
+    padding: 20px 30px !important;
+    
+}
+
+
+//Approvals
+.manage-members{
+    margin-top: 10px;
+}
+
+//Project
+.editProject{
+    font-size: 16px;
+    color: green;
+}
+
+.editProject:hover{
+    cursor: pointer;
+}
+
+
+@media only screen and (max-width: 768px) {
+    .today-button-mt{
+        margin-top: 10px !important;
+    }
+
+    .add-time-modal{
+        max-width: 600px !important;
+    }
+
+    .manage-members{
+        margin-top: 0px;
+        float: left !important;
+    }
+
+}
+
+
+
+
+
