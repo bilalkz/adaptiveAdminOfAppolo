@@ -27,4 +27,15 @@ export function organization(url, details) {
         .then(response => response)
         .catch(error => error.response);
 }
+export function create_org(url, details) {
+    //body = detail
+    debugger
+    console.log(url)
+    let dashboardDetails = { ...reqData };
+    dashboardDetails.apiPath = url;
+    return axios
+        .post('http://104.248.151.204:8100/api/organization_list/', { headers: { Authorization: `${"Bearer" + " "}${token}` } }, details)
+        .then(response => response)
+        .catch(error => error.response);
+}
 
