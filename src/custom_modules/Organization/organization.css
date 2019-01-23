@@ -1,0 +1,30 @@
+.tab-active {
+    text-align:center;
+  padding-bottom:5px;
+  background: /* gradient can be an image */
+    linear-gradient(
+      to right, 
+      #26D0CE 0%,
+      #1A2980 100%
+    )
+    left 
+    bottom
+    #777    
+    no-repeat; 
+  background-size:100% 2px ;
+}
+
+.tabs-container {
+  margin-bottom: 20px;
+}
+
+.btn-add {
+  float: right !important;
+  background: /* gradient can be an image */
+    linear-gradient(
+      to right, 
+      #26D0CE 0%,
+      #1A2980 100%
+    );
+    
+}
