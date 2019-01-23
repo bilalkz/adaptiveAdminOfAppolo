@@ -9,6 +9,7 @@ import timesheetApprovalsSagas from './custom_modules/TimesheetApproval/timeshee
 import signupConfirmationSagas from './custom_modules/SignUpConfirmation/signupConfirmationSagas';
 import profileSagas from './custom_modules/UserProfile/userProfileSagas';
 import projectSagas from './custom_modules/Projects/projectSagas';
+import OrganizationSagas from './custom_modules/Organization/organizationSaga'
 
 /**
  * rootSaga
@@ -25,5 +26,6 @@ export default function* root() {
         fork(signupConfirmationSagas),
         fork(profileSagas),
         fork(projectSagas),
+        fork(OrganizationSagas),
     ]);
 }
