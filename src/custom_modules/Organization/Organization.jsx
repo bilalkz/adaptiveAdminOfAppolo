@@ -95,6 +95,16 @@ class Organization extends React.Component {
         }
     }
 
+    addArchive = () => {
+        console.log('add to archived');
+    }
+    
+    toggleModal = () => {
+        this.setState({
+            modalVisible: !this.state.modalVisible
+        })
+    }
+
     openModal = () => {
         console.log('this is modal open');
         this.setState({
@@ -106,86 +116,42 @@ class Organization extends React.Component {
         return (
             <>
                 <div className="content">
-                    <Modal backdrop={false} isOpen={modalVisible} toggle={this.toggle} style={{ width: '100%'}} className='add-project-modal'>
+                    <Modal backdrop={false} isOpen={modalVisible} toggle={this.toggleModal} style={{ width: '100%'}} className='add-project-modal'>
                         <form onSubmit={this.handleSubmit()}>
-                            <ModalHeader className='' toggle={this.toggle}>Add Organization</ModalHeader>
+                            <ModalHeader toggle={this.toggleModal}>Add Organization</ModalHeader>
                             <ModalBody>
                                 <Form>
                                     <FormGroup row>
-                                        <Label for="exampleEmail" sm={2}>Email</Label>
-                                        <Col sm={10}>
-                                            <Input type="email" name="email" id="exampleEmail" placeholder="with a placeholder" />
+                                        <Label for="name" sm={4}>Organization Name</Label>
+                                        <Col sm={8}>
+                                            <Input type="text"  style={{ marginTop: '0px' }} id="organizationname" placeholder="Organization Name" />
                                         </Col>
                                     </FormGroup>
                                     <FormGroup row>
-                                        <Label for="examplePassword" sm={2}>Password</Label>
-                                        <Col sm={10}>
-                                            <Input type="password" name="password" id="examplePassword" placeholder="password placeholder" />
+                                        <Label for="address" sm={4}>Address</Label>
+                                        <Col sm={8}>
+                                            <Input type="text" style={{ marginTop: '0px' }}  id="address" placeholder="Address" />
                                         </Col>
                                     </FormGroup>
                                     <FormGroup row>
-                                        <Label for="exampleSelect" sm={2}>Select</Label>
-                                        <Col sm={10}>
-                                            <Input type="select" name="select" id="exampleSelect" />
+                                        <Label for="organizationType" sm={4}>Organization Type</Label>
+                                        <Col sm={8}>
+                                            <Input type="select" style={{ marginTop: '0px' }} name="select" id="organizationType" />
                                         </Col>
                                     </FormGroup>
                                     <FormGroup row>
-                                        <Label for="exampleSelectMulti" sm={2}>Select Multiple</Label>
-                                        <Col sm={10}>
-                                            <Input type="select" name="selectMulti" id="exampleSelectMulti" multiple />
+                                        <Label for="timezone" sm={4}>Time Zone</Label>
+                                        <Col sm={8}>
+                                            <Input type="select" style={{ marginTop: '0px' }} name="select" id="timezone" />
                                         </Col>
                                     </FormGroup>
                                     <FormGroup row>
-                                        <Label for="exampleText" sm={2}>Text Area</Label>
-                                        <Col sm={10}>
-                                            <Input type="textarea" name="text" id="exampleText" />
+                                        <Label for="type" sm={4}>Type</Label>
+                                        <Col sm={8}>
+                                            <Input type="select" style={{ marginTop: '0px' }} name="select" id="type" />
                                         </Col>
                                     </FormGroup>
-                                    <FormGroup row>
-                                        <Label for="exampleFile" sm={2}>File</Label>
-                                        <Col sm={10}>
-                                            <Input type="file" name="file" id="exampleFile" />
-                                            <FormText color="muted">
-                                                This is some placeholder block-level help text for the above input.
-                                                It's a bit lighter and easily wraps to a new line.
-            </FormText>
-                                        </Col>
-                                    </FormGroup>
-                                    <FormGroup tag="fieldset" row>
-                                        <legend className="col-form-label col-sm-2">Radio Buttons</legend>
-                                        <Col sm={10}>
-                                            <FormGroup check>
-                                                <Label check>
-                                                    <Input type="radio" name="radio2" />{' '}
-                                                    Option one is this and that—be sure to include why it's great
-              </Label>
-                                            </FormGroup>
-                                            <FormGroup check>
-                                                <Label check>
-                                                    <Input type="radio" name="radio2" />{' '}
-                                                    Option two can be something else and selecting it will deselect option one
-              </Label>
-                                            </FormGroup>
-                                            <FormGroup check disabled>
-                                                <Label check>
-                                                    <Input type="radio" name="radio2" disabled />{' '}
-                                                    Option three is disabled
-              </Label>
-                                            </FormGroup>
-                                        </Col>
-                                    </FormGroup>
-                                    <FormGroup row>
-                                        <Label for="checkbox2" sm={2}>Checkbox</Label>
-                                        <Col sm={{ size: 10 }}>
-                                            <FormGroup check>
-                                                <Label check>
-                                                    <Input type="checkbox" id="checkbox2" />{' '}
-                                                    Check me out
-              </Label>
-                                            </FormGroup>
-                                        </Col>
-                                    </FormGroup>
-                                    <FormGroup check row>
+                                    <FormGroup submit>
                                         <Col sm={{ size: 10, offset: 2 }}>
                                             <Button>Submit</Button>
                                         </Col>
@@ -324,7 +290,8 @@ class Organization extends React.Component {
                                                 Cell: row => (
                                                     <div className='text-center'>
                                                         <span>
-                                                            <i className='fa fa-edit editProject' onClick={() => this.toggle('Update project', row.original)} />
+                                                            <i className='fa fa-edit editProject' onClick={() => this.toggleModal('Update project', row.original)} />
+                                                            <Button outline color="primary" size="sm" onClick={this.addArchive}>Archive</Button>
                                                         </span>
                                                     </div>
                                                 )
