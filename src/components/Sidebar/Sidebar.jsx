@@ -53,44 +53,58 @@ class Sidebar extends React.Component {
         var st = {};
         st[prop["state"]] = !this.state[prop.state];
         return (
-          <li
-            className={this.getCollapseInitialState(prop.views) ? "active" : ""}
-            key={key}
-          >
-            <a
-              href="#pablo"
-              data-toggle="collapse"
-              aria-expanded={this.state[prop.state]}
-              onClick={e => {
-                e.preventDefault();
-                this.setState(st);
-              }}
+          <React.Fragment>
+            <li
+              className={this.getCollapseInitialState(prop.views) ? "active" : ""}
+              key={key}
             >
-              {prop.icon !== undefined ? (
-                <>
-                  <i className={prop.icon} />
-                  <p>
-                    {prop.name}
-                    <b className="caret" />
-                  </p>
-                </>
-              ) : (
-                <>
-                  <span className="sidebar-mini-icon">{prop.mini}</span>
-                  <span className="sidebar-normal">
-                    {prop.name}
-                    <b className="caret" />
-                  </span>
-                </>
-              )}
-            </a>
-            <Collapse isOpen={this.state[prop.state]}>
-              <ul className="nav">{this.createLinks(prop.views)}</ul>
-            </Collapse>
-          </li>
+              <a
+                href="#pablo"
+                data-toggle="collapse"
+                aria-expanded={this.state[prop.state]}
+                onClick={e => {
+                  e.preventDefault();
+                  this.setState(st);
+                }}
+              >
+                {prop.icon !== undefined ? (
+                  <>
+                    <i className={prop.icon} />
+                    <p>
+                      {prop.name}
+                      <b className="caret" />
+                    </p>
+                  </>
+                ) : (
+                    <>
+                      <span className="sidebar-mini-icon">{prop.mini}</span>
+                      <span className="sidebar-normal">
+                        {prop.name}
+                        <b className="caret" />
+                      </span>
+                    </>
+                  )}
+              </a>
+              <Collapse isOpen={this.state[prop.state]}>
+                <ul className="nav">{this.createLinks(prop.views)}</ul>
+              </Collapse>
+            </li>
+          </React.Fragment>
+
         );
       }
-    
+
+      {
+       if (prop.name === "Organization") {
+         return (
+         <div className="logo">
+        <h4 style={{ color: '#fff', fontSize: '12px', paddingLeft: '2px' }}>Admin</h4>
+        </div>
+      ) 
+      }
+      }
+
+
       return (
         <li className={this.activeRoute(prop.layout + prop.path)} key={key}>
           <NavLink to={prop.layout + prop.path} activeClassName="">
@@ -100,11 +114,11 @@ class Sidebar extends React.Component {
                 <p>{prop.name}</p>
               </>
             ) : (
-              <>
-                <span className="sidebar-mini-icon">{prop.mini}</span>
-                <span className="sidebar-normal">{prop.name}</span>
-              </>
-            )}
+                <>
+                  <span className="sidebar-mini-icon">{prop.mini}</span>
+                  <span className="sidebar-normal">{prop.name}</span>
+                </>
+              )}
           </NavLink>
         </li>
       );
@@ -131,8 +145,8 @@ class Sidebar extends React.Component {
     }
   }
   render() {
-    const {auth} = this.props;
-    console.log('authentication',auth);
+    const { auth } = this.props;
+    console.log('authentication', auth);
     return (
       <div
         className="sidebar"
@@ -148,17 +162,15 @@ class Sidebar extends React.Component {
               <img src={logo} alt="react-logo" />
             </div>
           </a>
-       
-            <h2>Apploye</h2>
-        
+
+          <h2>Apploye</h2>
+
         </div>
 
         <div className="sidebar-wrapper" ref="sidebar">
-          <Nav style={{fontSize: '7px', padding: '-20px'}}>{this.createLinks(this.props.routes)}</Nav>
-          <div className="logo">
-            <h4 style={{color: '#fff', fontSize: '12px', paddingLeft: '2px'}}>Admin</h4>
-        </div>
-          <Nav style={{fontSize: '7px', padding: '-20px'}}>{this.createLinks(this.props.subroute)}</Nav>
+          <Nav style={{ fontSize: '7px', padding: '-20px' }}>{this.createLinks(this.props.routes)}</Nav>
+
+          {/* <Nav style={{fontSize: '7px', padding: '-20px'}}>{this.createLinks(this.props.subroute)}</Nav> */}
         </div>
 
         {/* <div className="sidebar-wrapper">

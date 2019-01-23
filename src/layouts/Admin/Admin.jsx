@@ -8,7 +8,7 @@ import Footer from "components/Footer/Footer.jsx";
 import Sidebar from "components/Sidebar/Sidebar.jsx";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.jsx";
 
-import routes,{subroute} from "routes.js";
+import routes, { subroute } from "routes.js";
 import { PrivateRoute } from '../../modules/privateRoute';
 
 var ps;
@@ -20,7 +20,7 @@ class Admin extends React.Component {
       backgroundColor: "black",
       activeColor: "info",
       sidebarMini: false,
-      name:"wasif"
+      name: "wasif"
     };
   }
 
@@ -87,7 +87,7 @@ class Admin extends React.Component {
         <Sidebar
           {...this.props}
           routes={routes}
-          subroute={subroute}
+          // subroute={subroute}
           bgColor={this.state.backgroundColor}
           activeColor={this.state.activeColor}
         />
@@ -98,7 +98,8 @@ class Admin extends React.Component {
             this.props.location.pathname.indexOf("full-screen-map") !==
               -1 ? null : (
                 <Footer fluid />
-              )}
+              )
+          }
         </div>
         {/* <FixedPlugin
           bgColor={this.state.backgroundColor}

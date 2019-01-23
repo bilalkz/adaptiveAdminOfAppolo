@@ -325,6 +325,27 @@ const routes = [
           layout: "/admin",
           redirect:true
   },
+  {
+    path:"/organization",
+    name: "Organization",
+    icon: "nc-icon nc-calendar-60",
+    component: Organization,
+    layout: "/admin"
+   },
+   {
+    path:"/organization",
+    name: "organization",
+    icon: "nc-icon nc-calendar-60",
+    component: Organization,
+    layout: "/admin"
+   },
+   {
+     path:"/client",
+     name: "Client",
+     icon: "nc-icon nc-calendar-60",
+     component: Client,
+     layout: "/admin"
+   },
   // {
   //   collapse: true,
   //   name: "Pages",
@@ -548,20 +569,20 @@ const routes = [
   //   layout: "/adminroutes
   // }
 ];
-export const subroute=[{
- path:"/organization",
- name: "Organization",
- icon: "nc-icon nc-calendar-60",
- component: Organization,
- layout: "/admin"
-},
-{
-  path:"/client",
-  name: "Client",
-  icon: "nc-icon nc-calendar-60",
-  component: Client,
-  layout: "/admin"
-}]
+// export const subroute=[{
+//  path:"/organization",
+//  name: "Organization",
+//  icon: "nc-icon nc-calendar-60",
+//  component: Organization,
+//  layout: "/admin"
+// },
+// {
+//   path:"/client",
+//   name: "Client",
+//   icon: "nc-icon nc-calendar-60",
+//   component: Client,
+//   layout: "/admin"
+// }]
 
 
 export default routes;
