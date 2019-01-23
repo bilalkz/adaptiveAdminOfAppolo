@@ -174,172 +174,172 @@ class Client extends React.Component {
                                         <Input type="select" onChange={this.handleChange} value={this.state.clientContact} style={{ marginTop: '0px' }} name="clientContact" id="type">
                                             <option>Monitored</option>
                                             <option>Unmonitored</option>
+                                            <option>Unmonitored Field Service</option>
+                                        </Input>
+                                    </Col>
+                                </FormGroup>
+                                <FormGroup submit>
+                                    <Col sm={{ size: 10, offset: 2 }}>
+                                        <Button>Submit</Button>
+                                    </Col>
+                                </FormGroup>
+                            </Form>
+                        </ModalBody>
 
-      <div className="content">
-        <Row>
-          <h3 className='remove-default-mt'>Client</h3>
-        </Row>
+                    </Modal>
+                    <Container>
+                        <Row className="tabs-container">
+                            <Nav tabs>
+                                <NavItem>
+                                    <NavLink
 
-        <Row>
+                                        className={classnames({ 'tab-active': this.state.activeTab === '1' })}
+                                        onClick={() => { this.toggle('1'); }}
+                                        style={{cursor:'pointer'}}
+                                    >
+                                        Client List
+                        </NavLink>
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink
+                                        className={classnames({ 'tab-active': this.state.activeTab === '2' })}
+                                        onClick={() => { this.toggle('2'); }}
+                                        style={{cursor:'pointer'}}
+                                    >
+                                        Archived
+                        </NavLink>
+                                </NavItem>
+                            </Nav>
+                            <Input style={{ marginLeft: '10px', height: '36px', width: '30%', marginTop: '0px' }} placeholder="search" />
+                            <Button className="btn-add" style={{ marginTop: '0px', borderRadius: '0' }} onClick={this.openModal}>Add Organization</Button>
+                        </Row>
+                    </Container>
+                    <TabContent activeTab={this.state.activeTab}>
+                        <TabPane tabId="1">
+                            <Row>
+                                <Col sm={12}>
+                                    <ReactTable
+                                        pageSizeOptions={[10, 20, 50]}
+                                        data={ClientList}
+                                        columns={[
+                                            {
+                                                Header: () => (
+                                                    <span className='table-header-style'>
+                                                        Name
+                                            </span>
+                                                ),
+                                                headerClassName: 'text-center',
+                                                sortable: false,
+                                                accessor: "client_name",
+                                                Cell: row => (
+                                                    <div className='text-center'>
+                                                        <span className='text-center'>
+                                                            {row.value}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            },
+                                            {
+                                                Header: () => (
+                                                    <span className='table-header-style'>
+                                                        Address
+                                            </span>
+                                                ),
+                                                headerClassName: 'text-center',
+                                                sortable: false,
+                                                accessor: "client_address",
+                                                Cell: row => (
+                                                    <div className='text-center'>
+                                                        <span className='text-center'>
+                                                            {row.value}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            },
+                                            {
+                                                Header: () => (
+                                                    <span className='table-header-style'>
+                                                        Email
+                                            </span>
+                                                ),
+                                                headerClassName: 'text-center',
+                                                sortable: false,
+                                                accessor: "client_email",
+                                                Cell: row => (
+                                                    <div className='text-center'>
+                                                        <span className='text-center'>
+                                                            {row.value}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            },
+                                            {
+                                                Header: () => (
+                                                    <span className='table-header-style'>
+                                                        Organization
+                                            </span>
+                                                ),
+                                                headerClassName: 'text-center',
+                                                sortable: false,
+                                                accessor: "client_organization",
+                                                Cell: row => (
+                                                    <div className='text-center'>
+                                                        <span className='text-center'>
+                                                            {row.value}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            },
+                                            {
+                                                Header: () => (
+                                                    <span className='table-header-style'>
+                                                        Contact
+                                            </span>
+                                                ),
+                                                headerClassName: 'text-center',
+                                                sortable: false,
+                                                accessor: "client_contact",
+                                                Cell: row => (
+                                                    <div className='text-center'>
+                                                        <span className='text-center'>
+                                                            {row.value}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            },
+                                            {
+                                                Header: () => (
+                                                    <span className='table-header-style'>
+                                                        Actions
+                                            </span>
+                                                ),
+                                                headerClassName: 'text-center',
+                                                sortable: false,
+                                                accessor: "id",
+                                                Cell: row => (
+                                                    <div className='text-center'>
+                                                        <span>
+                                                            <i className='fa fa-edit editProject' onClick={() => this.editModal(row)} />
+                                                            <Button outline color="primary" size="sm" onClick={this.addArchive}>Archive</Button>
+                                                        </span>
+                                                    </div>
+                                                )
+                                            },
+                                        ]}
+                                        defaultPageSize={10}
+                                        className="-striped -highlight"
+                                    />
+                                </Col>
+                            </Row>
+                        </TabPane>
+                        <TabPane tabId="2">
 
-          <Nav tabs>
-            <NavItem>
-              <NavLink
-                className={classnames({ active: this.state.activeTab === '1' })}
-                onClick={() => { this.toggle('1'); }}
-              >
-                Tab1
-            </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink
-                className={classnames({ active: this.state.activeTab === '2' })}
-                onClick={() => { this.toggle('2'); }}
-              >
-                Moar Tabs
-            </NavLink>
-            </NavItem>
-          </Nav>
-          <Col md="8">
-            <input type="text" name="email" id="exampleEmail" style={{ width: '300px', background: 'white', marginTop:'0px'}} className="form-control" placeholder="with a placeholder" />
-          </Col>
-          <Col>
-            <Button
-              style={{ background: "linear-gradient(to right,  #33ccae 0%, #00a99d 100%)" }}
-              className="text-center">Add manual time
-          </Button>
-          </Col>
-        </Row>
-        <TabContent activeTab={this.state.activeTab}>
-          <TabPane tabId="1">
-            <Row>
-              <Col md="12">
-                <Card className="dashboardTable tableBigHeight">
-                  <CardBody>
-                    <Table responsive>
-                      <thead>
-                        <tr>
-                          <th>Client Name</th>
-                          <th>Address</th>
-                          <th>Email</th>
-                          <th>Organization</th>
-                          <th>Contact</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>
-                            <span className="mlr10">
-                              APPLOYEE - Development
-                                    </span>
-                          </td>
-
-                          <td>
-                            <div>
-                              08:05:53
-                                  </div>
-                          </td>
-                          <td>
-                            <div>
-                              08:05:53
-                                  </div>
-                          </td>
-                          <td>
-                            <div>
-                              08:05:53
-                                  </div>
-                          </td>
-                          <td>
-                            <div>
-                              08:05:53
-                                  </div>
-                          </td>
-                          <td>
-                            <div>
-                              08:05:53
-                                  </div>
-                          </td>
-
-                        </tr>
-
-                      </tbody>
-                    </Table>
-                  </CardBody>
-
-                </Card>
-              </Col>
-            </Row>
-          </TabPane>
-
-          <TabPane tabId="2">
-            <Row>
-              <Col md="12">
-                <Card className="dashboardTable tableBigHeight">
-                  <CardBody>
-                    <Table responsive>
-                      <thead>
-                        <tr>
-                          <th>Client Name</th>
-                          <th>Address</th>
-                          <th>Email</th>
-                          <th>Organization</th>
-                          <th>Contact</th>
-                          <th>UnArchive</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>
-                            <span className="mlr10">
-                              APPLOYEE - Development
-                                    </span>
-                          </td>
-
-                          <td>
-                            <div>
-                              08:05:53
-                                  </div>
-                          </td>
-                          <td>
-                            <div>
-                              08:05:53
-                                  </div>
-                          </td>
-                          <td>
-                            <div>
-                              08:05:53
-                                  </div>
-                          </td>
-                          <td>
-                            <div>
-                              08:05:53
-                                  </div>
-                          </td>
-                          <td>
-                            <div>
-                              unArchive
-                                  </div>
-                          </td>
-
-                        </tr>
-
-                      </tbody>
-                    </Table>
-                  </CardBody>
-
-                </Card>
-              </Col>
-            </Row>
-          </TabPane>
-
-        </TabContent>
-
-
-      </div>
-
-    );
-  }
+                        </TabPane>
+                    </TabContent>
+                </div>
+            </>
+        );
+    }
 }
 
 export default Client;

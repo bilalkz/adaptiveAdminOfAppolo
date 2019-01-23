@@ -35,7 +35,7 @@ import ReactTable from "react-table";
 import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { reduxInput, reduxTextarea } from '../../components/reduxInput/reduxInput';
 import { reduxDatepicker } from '../../components/reduxDatePicker/reduxDatepicker';
-
+import { connect } from 'react-redux';
 const initialState = {
     orgName: '',
     orgAddress: '',
@@ -198,7 +198,7 @@ class Organization extends React.Component {
 
                                         className={classnames({ 'tab-active': this.state.activeTab === '1' })}
                                         onClick={() => { this.toggle('1'); }}
-                                        style={{cursor:'pointer'}}
+                                        style={{ cursor: 'pointer' }}
                                     >
                                         Organization List
                         </NavLink>
@@ -207,7 +207,7 @@ class Organization extends React.Component {
                                     <NavLink
                                         className={classnames({ 'tab-active': this.state.activeTab === '2' })}
                                         onClick={() => { this.toggle('2'); }}
-                                        style={{cursor:'pointer'}}
+                                        style={{ cursor: 'pointer' }}
                                     >
                                         Archived
                         </NavLink>
@@ -343,6 +343,9 @@ class Organization extends React.Component {
             </>
         );
     }
+}
+const mapStateToProps = () => {
+
 }
 
 export default Organization;
