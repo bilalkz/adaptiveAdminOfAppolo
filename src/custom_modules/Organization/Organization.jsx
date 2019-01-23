@@ -198,6 +198,7 @@ class Organization extends React.Component {
 
                                         className={classnames({ 'tab-active': this.state.activeTab === '1' })}
                                         onClick={() => { this.toggle('1'); }}
+                                        style={{cursor:'pointer'}}
                                     >
                                         Organization List
                         </NavLink>
@@ -206,6 +207,7 @@ class Organization extends React.Component {
                                     <NavLink
                                         className={classnames({ 'tab-active': this.state.activeTab === '2' })}
                                         onClick={() => { this.toggle('2'); }}
+                                        style={{cursor:'pointer'}}
                                     >
                                         Archived
                         </NavLink>
