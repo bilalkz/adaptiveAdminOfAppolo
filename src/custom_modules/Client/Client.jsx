@@ -46,6 +46,14 @@ const initialState = {
     modalHeader: '',
     activeTab: '1',
     row: [],
+    archived: [{
+        id: '4',
+        client_name: 'Spacesoft',
+        client_address: '100/4, road-6, Hubstaff',
+        client_email: 'Software Industry',
+        client_organization: 'Spacesoft',
+        client_contact: '+800 1234 1234',
+    }],
     ClientList: [{
         id: '1',
         client_name: 'Spacesoft',
@@ -107,6 +115,11 @@ class Client extends React.Component {
     addArchive = () => {
         console.log('add to archived');
     }
+
+    unArchive = () => {
+        console.log('this is unarchive');
+    }
+
     editModal = (row) => {
         // console.log(row.original)
         this.setState({
@@ -132,7 +145,7 @@ class Client extends React.Component {
         })
     }
     render() {
-        const { modalVisible, modalHeader, ClientList } = this.state;
+        const { modalVisible, modalHeader, ClientList, archived } = this.state;
         return (
             <>
                 <div className="content">
@@ -195,7 +208,7 @@ class Client extends React.Component {
 
                                         className={classnames({ 'tab-active': this.state.activeTab === '1' })}
                                         onClick={() => { this.toggle('1'); }}
-                                        style={{cursor:'pointer'}}
+                                        style={{ cursor: 'pointer' }}
                                     >
                                         Client List
                         </NavLink>
@@ -204,7 +217,7 @@ class Client extends React.Component {
                                     <NavLink
                                         className={classnames({ 'tab-active': this.state.activeTab === '2' })}
                                         onClick={() => { this.toggle('2'); }}
-                                        style={{cursor:'pointer'}}
+                                        style={{ cursor: 'pointer' }}
                                     >
                                         Archived
                         </NavLink>
@@ -333,7 +346,121 @@ class Client extends React.Component {
                             </Row>
                         </TabPane>
                         <TabPane tabId="2">
-
+                        <Row>
+                                <Col sm={12}>
+                                    <ReactTable
+                                        pageSizeOptions={[10, 20, 50]}
+                                        data={archived}
+                                        columns={[
+                                            {
+                                                Header: () => (
+                                                    <span className='table-header-style'>
+                                                        Name
+                                            </span>
+                                                ),
+                                                headerClassName: 'text-center',
+                                                sortable: false,
+                                                accessor: "client_name",
+                                                Cell: row => (
+                                                    <div className='text-center'>
+                                                        <span className='text-center'>
+                                                            {row.value}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            },
+                                            {
+                                                Header: () => (
+                                                    <span className='table-header-style'>
+                                                        Address
+                                            </span>
+                                                ),
+                                                headerClassName: 'text-center',
+                                                sortable: false,
+                                                accessor: "client_address",
+                                                Cell: row => (
+                                                    <div className='text-center'>
+                                                        <span className='text-center'>
+                                                            {row.value}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            },
+                                            {
+                                                Header: () => (
+                                                    <span className='table-header-style'>
+                                                        Email
+                                            </span>
+                                                ),
+                                                headerClassName: 'text-center',
+                                                sortable: false,
+                                                accessor: "client_email",
+                                                Cell: row => (
+                                                    <div className='text-center'>
+                                                        <span className='text-center'>
+                                                            {row.value}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            },
+                                            {
+                                                Header: () => (
+                                                    <span className='table-header-style'>
+                                                        Organization
+                                            </span>
+                                                ),
+                                                headerClassName: 'text-center',
+                                                sortable: false,
+                                                accessor: "client_organization",
+                                                Cell: row => (
+                                                    <div className='text-center'>
+                                                        <span className='text-center'>
+                                                            {row.value}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            },
+                                            {
+                                                Header: () => (
+                                                    <span className='table-header-style'>
+                                                        Contact
+                                            </span>
+                                                ),
+                                                headerClassName: 'text-center',
+                                                sortable: false,
+                                                accessor: "client_contact",
+                                                Cell: row => (
+                                                    <div className='text-center'>
+                                                        <span className='text-center'>
+                                                            {row.value}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            },
+                                            {
+                                                Header: () => (
+                                                    <span className='table-header-style'>
+                                                        Actions
+                                            </span>
+                                                ),
+                                                headerClassName: 'text-center',
+                                                sortable: false,
+                                                accessor: "id",
+                                                Cell: row => (
+                                                    <div className='text-center'>
+                                                        <span>
+                                                            <i className='fa fa-edit editProject' onClick={() => this.editModal(row)} />
+                                                            <Button outline color="secondary" size="sm" onClick={this.unArchive}>Unarchive</Button>
+                                                        </span>
+                                                    </div>
+                                                )
+                                            },
+                                        ]}
+                                        defaultPageSize={10}
+                                        className="-striped -highlight"
+                                    />
+                                </Col>
+                            </Row>
                         </TabPane>
                     </TabContent>
                 </div>

@@ -33,9 +33,12 @@ import './organization.css';
 import classnames from 'classnames';
 import ReactTable from "react-table";
 import { Field, reduxForm, formValueSelector } from 'redux-form';
+import { connect } from 'react-redux';
+import { getOrganizations } from './organizationAction'
 import { reduxInput, reduxTextarea } from '../../components/reduxInput/reduxInput';
 import { reduxDatepicker } from '../../components/reduxDatePicker/reduxDatepicker';
-import { connect } from 'react-redux';
+import { from } from 'rxjs';
+
 const initialState = {
     orgName: '',
     orgAddress: '',
@@ -46,6 +49,14 @@ const initialState = {
     modalHeader: '',
     activeTab: '1',
     row: [],
+    archived: [{
+        id: '4',
+        organization_name: 'Spacesoft',
+        organization_address: '100/4, road-6, Hubstaff',
+        organization_type: 'Software Industry',
+        organization_timezone: 'Dhaka, Bangladesh UTC +6',
+        organization_plan: 'Monitored',
+    }],
     OrganizationList: [{
         id: '1',
         organization_name: 'Spacesoft',
@@ -76,17 +87,15 @@ const initialState = {
     ]
 }
 
-
-
-
-
-
 class Organization extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             ...initialState
         }
+    }
+    componentDidMount() {
+        this.props.organizations()
     }
 
     handleChange = (e) => {
@@ -105,6 +114,10 @@ class Organization extends React.Component {
                 activeTab: tab
             });
         }
+    }
+
+    unArchive = () => {
+        console.log('this is unarchive');
     }
 
     addArchive = () => {
@@ -135,7 +148,7 @@ class Organization extends React.Component {
         })
     }
     render() {
-        const { modalVisible, modalHeader, OrganizationList } = this.state;
+        const { modalVisible, modalHeader, OrganizationList, archived } = this.state;
         return (
             <>
                 <div className="content">
@@ -336,7 +349,121 @@ class Organization extends React.Component {
                             </Row>
                         </TabPane>
                         <TabPane tabId="2">
-
+                            <Row>
+                                <Col sm={12}>
+                                    <ReactTable
+                                        pageSizeOptions={[10, 20, 50]}
+                                        data={archived}
+                                        columns={[
+                                            {
+                                                Header: () => (
+                                                    <span className='table-header-style'>
+                                                        Name
+                                            </span>
+                                                ),
+                                                headerClassName: 'text-center',
+                                                sortable: false,
+                                                accessor: "organization_name",
+                                                Cell: row => (
+                                                    <div className='text-center'>
+                                                        <span className='text-center'>
+                                                            {row.value}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            },
+                                            {
+                                                Header: () => (
+                                                    <span className='table-header-style'>
+                                                        Address
+                                            </span>
+                                                ),
+                                                headerClassName: 'text-center',
+                                                sortable: false,
+                                                accessor: "organization_address",
+                                                Cell: row => (
+                                                    <div className='text-center'>
+                                                        <span className='text-center'>
+                                                            {row.value}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            },
+                                            {
+                                                Header: () => (
+                                                    <span className='table-header-style'>
+                                                        Organization Type
+                                            </span>
+                                                ),
+                                                headerClassName: 'text-center',
+                                                sortable: false,
+                                                accessor: "organization_type",
+                                                Cell: row => (
+                                                    <div className='text-center'>
+                                                        <span className='text-center'>
+                                                            {row.value}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            },
+                                            {
+                                                Header: () => (
+                                                    <span className='table-header-style'>
+                                                        Time Zone
+                                            </span>
+                                                ),
+                                                headerClassName: 'text-center',
+                                                sortable: false,
+                                                accessor: "organization_timezone",
+                                                Cell: row => (
+                                                    <div className='text-center'>
+                                                        <span className='text-center'>
+                                                            {row.value}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            },
+                                            {
+                                                Header: () => (
+                                                    <span className='table-header-style'>
+                                                        Plan
+                                            </span>
+                                                ),
+                                                headerClassName: 'text-center',
+                                                sortable: false,
+                                                accessor: "organization_plan",
+                                                Cell: row => (
+                                                    <div className='text-center'>
+                                                        <span className='text-center table-status-style' style={{ border: '1px', borderRadius: '20px', backgroundImage: 'linear-gradient(to right, #26D0CE,#1A2980)' }}>
+                                                            {row.value}
+                                                        </span>
+                                                    </div>
+                                                )
+                                            },
+                                            {
+                                                Header: () => (
+                                                    <span className='table-header-style'>
+                                                        Actions
+                                            </span>
+                                                ),
+                                                headerClassName: 'text-center',
+                                                sortable: false,
+                                                accessor: "id",
+                                                Cell: row => (
+                                                    <div className='text-center'>
+                                                        <span>
+                                                            <i className='fa fa-edit editProject' onClick={() => this.editModal(row)} />
+                                                            <Button outline color="secondary" size="sm" onClick={this.unArchive}>Unarchive</Button>
+                                                        </span>
+                                                    </div>
+                                                )
+                                            },
+                                        ]}
+                                        defaultPageSize={10}
+                                        className="-striped -highlight"
+                                    />
+                                </Col>
+                            </Row>
                         </TabPane>
                     </TabContent>
                 </div>
@@ -344,8 +471,15 @@ class Organization extends React.Component {
         );
     }
 }
-const mapStateToProps = () => {
-
+const mapStateToProps = (state) => {
+    return {
+        state
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        organizations: (payload) => { dispatch(getOrganizations(payload)) }
+    }
 }
 
-export default Organization;
+export default connect(mapStateToProps, mapDispatchToProps)(Organization);
