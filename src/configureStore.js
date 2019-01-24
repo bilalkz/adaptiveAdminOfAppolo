@@ -18,17 +18,20 @@ const sagaMiddleware = createSagaMiddleware()
 
 const persistedReducer = persistReducer(persistConfig, rootReducer(history))
 
-if(window.navigator.userAgent.includes('Chrome')){
+if (window.navigator.userAgent.includes('Chrome')) {
 
 }
 export const store = createStore(
     rootReducer(history),
+
     compose(
         applyMiddleware(
-          routerMiddleware(history), // for dispatching history actions
-          sagaMiddleware,
+            routerMiddleware(history), // for dispatching history actions
+            sagaMiddleware,
         ),
-      ),
+
+    ),
+
 )
 
 export const persistor = persistStore(store)

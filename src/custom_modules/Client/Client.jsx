@@ -35,6 +35,8 @@ import ReactTable from "react-table";
 import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { reduxInput, reduxTextarea } from '../../components/reduxInput/reduxInput';
 import { reduxDatepicker } from '../../components/reduxDatePicker/reduxDatepicker';
+import { connect } from 'react-redux';
+import { getClient } from './clientAction';
 
 const initialState = {
     clientName: '',
@@ -104,6 +106,10 @@ class Client extends React.Component {
         console.log('open a modal');
     }
 
+    componentDidMount() {
+        this.props.clientsList();
+    }
+
     toggle = (tab) => {
         if (this.state.activeTab !== tab) {
             this.setState({
@@ -150,7 +156,7 @@ class Client extends React.Component {
             <>
                 <div className="content">
                     <Modal backdrop={false} isOpen={modalVisible} toggle={this.toggleModal} style={{ width: '100%' }} className='add-project-modal'>
-                        <ModalHeader toggle={this.toggleModal}>Add Organization</ModalHeader>
+                        <ModalHeader toggle={this.toggleModal}>Add Client</ModalHeader>
                         <ModalBody>
                             <Form onSubmit={this.handleSubmit}>
                                 <FormGroup row>
@@ -224,7 +230,7 @@ class Client extends React.Component {
                                 </NavItem>
                             </Nav>
                             <Input style={{ marginLeft: '10px', height: '36px', width: '30%', marginTop: '0px' }} placeholder="search" />
-                            <Button className="btn-add" style={{ marginTop: '0px', borderRadius: '0' }} onClick={this.openModal}>Add Organization</Button>
+                            <Button className="btn-add" style={{ marginTop: '0px', borderRadius: '0' }} onClick={this.openModal}>Add Client</Button>
                         </Row>
                     </Container>
                     <TabContent activeTab={this.state.activeTab}>
@@ -346,7 +352,7 @@ class Client extends React.Component {
                             </Row>
                         </TabPane>
                         <TabPane tabId="2">
-                        <Row>
+                            <Row>
                                 <Col sm={12}>
                                     <ReactTable
                                         pageSizeOptions={[10, 20, 50]}
@@ -469,4 +475,11 @@ class Client extends React.Component {
     }
 }
 
-export default Client;
+const mapStateToProps = (state) => ({
+    clients: state.clients,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+    clientsList: () => { dispatch(getClient()) }
+})
+export default connect(mapStateToProps, mapDispatchToProps)(Client);
