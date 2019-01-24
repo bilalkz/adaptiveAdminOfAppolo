@@ -33,9 +33,12 @@ import './organization.css';
 import classnames from 'classnames';
 import ReactTable from "react-table";
 import { Field, reduxForm, formValueSelector } from 'redux-form';
+import { connect } from 'react-redux';
+import { getOrganizations } from './organizationAction'
 import { reduxInput, reduxTextarea } from '../../components/reduxInput/reduxInput';
 import { reduxDatepicker } from '../../components/reduxDatePicker/reduxDatepicker';
-import { connect } from 'react-redux';
+import { from } from 'rxjs';
+
 const initialState = {
     orgName: '',
     orgAddress: '',
@@ -84,17 +87,15 @@ const initialState = {
     ]
 }
 
-
-
-
-
-
 class Organization extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             ...initialState
         }
+    }
+    componentDidMount() {
+        this.props.organizations()
     }
 
     handleChange = (e) => {
@@ -118,7 +119,7 @@ class Organization extends React.Component {
     unArchive = () => {
         console.log('this is unarchive');
     }
-    
+
     addArchive = () => {
         console.log('add to archived');
     }
@@ -348,7 +349,7 @@ class Organization extends React.Component {
                             </Row>
                         </TabPane>
                         <TabPane tabId="2">
-                        <Row>
+                            <Row>
                                 <Col sm={12}>
                                     <ReactTable
                                         pageSizeOptions={[10, 20, 50]}
@@ -470,8 +471,15 @@ class Organization extends React.Component {
         );
     }
 }
-const mapStateToProps = () => {
-
+const mapStateToProps = (state) => {
+    return {
+        state
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        organizations: (payload) => { dispatch(getOrganizations(payload)) }
+    }
 }
 
-export default Organization;
+export default connect(mapStateToProps, mapDispatchToProps)(Organization);

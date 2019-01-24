@@ -46,7 +46,7 @@ export const archiveUnAchinveOrganization = (id, payload) => axios.patch(`${base
 
 const token = localStorage.getItem('access_token');
 
-
+console.log(token)
 
 //add the following lines to any file where you import axios
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
@@ -78,6 +78,7 @@ const api = axios.create({
     baseURL: baseURL,
     headers: token ? makeHeaderWithToken() : makeHeaders(),
 });
+
 console.log("apii=======", api)
 export default api;
 
