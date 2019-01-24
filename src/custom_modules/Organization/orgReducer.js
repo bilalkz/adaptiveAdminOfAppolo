@@ -1,9 +1,17 @@
-import { GET_ORGANIZATION_LIST, GET_ORGANIZATION_LIST_SUCCESS, GET_ORGANIZATION_LIST_FAIL } from '../../modules/constants';
+import {
+    GET_ORGANIZATION_LIST,
+    GET_ORGANIZATION_LIST_SUCCESS,
+    GET_ORGANIZATION_LIST_FAIL,
+    ORGANIZATION_TYPES,
+    ORGANIZATION_TYPES_SUCCESS,
+    ORGANIZATION_TYPES_FAIL
+} from '../../modules/constants';
 import { createNotification } from '../../modules/notificationManager';
 
 // default initial state
 const initialState = {
     organizatins: [],
+    orgTypes: [],
     isLoading: false,
     errors: null
 }
@@ -25,7 +33,10 @@ const orgainzationReducer = (state = initialState, action) => {
         case GET_ORGANIZATION_LIST_FAIL:
             return {
                 ...state, isLoading: false, errors: action.payload
-
+            }
+        case ORGANIZATION_TYPES_SUCCESS:
+            return {
+                ...state, orgTypes: action.payload
             }
         default:
             return state

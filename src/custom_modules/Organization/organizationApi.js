@@ -11,31 +11,43 @@ const reqData = {
     pathParams: [],
 };
 const token = localStorage.getItem('access_token');
-const baseURLOrganization = 'http://104.248.151.204:81000/api';
-// const response = yield call(organization(`/organization_list/`));
+console.log(token)
+const baseURLOrganization = 'http://104.248.151.204:8100/api';
+
 const headers = {
     'Authorization': `${"Bearer" + " "}${token}`,
     'Content-Type': 'application/json',
 };
 export function organization(url, details) {
-    debugger
     console.log(url)
     let dashboardDetails = { ...reqData };
     dashboardDetails.apiPath = url;
     return axios
         .get('http://104.248.151.204:8100/api/organization_list/', { headers: { Authorization: `${"Bearer" + " "}${token}` } })
-        .then(response => response)
-        .catch(error => error.response);
 }
-export function create_org(url, details) {
-    //body = detail
-    debugger
-    console.log(url)
-    let dashboardDetails = { ...reqData };
-    dashboardDetails.apiPath = url;
+export function create_org(payload) {
+    console.log(payload)
+    console.log(token)
+    // let dashboardDetails = { ...reqData };
+    // dashboardDetails.apiPath = url;
     return axios
-        .post('http://104.248.151.204:8100/api/organization_list/', { headers: { Authorization: `${"Bearer" + " "}${token}` } }, details)
-        .then(response => response)
-        .catch(error => error.response);
+        .post('http://104.248.151.204:8100/api/organization/', payload, { headers: { Authorization: `${"Bearer" + " "}${token}` } })
 }
 
+export function update_org(payload) {
+    return axios
+        .put(`http://104.248.151.204:8100/api/organization/${payload.id}/`, payload.obj, { headers: { Authorization: `${"Bearer" + " "}${token}` } })
+}
+
+// get organization types
+
+export function orgTypeApi(payload) {
+    return axios
+        .get('http://104.248.151.204:8100/api/organization_types/', { headers: { Authorization: `${"Bearer" + " "}${token}` } })
+}
+
+//archive  
+export const archiveendpoint = (payload) => {
+    return axios
+        .patch(`http://104.248.151.204:8100/api/organization/${payload.id}/`, payload.obj, { headers: { Authorization: `${"Bearer" + " "}${token}` } })
+}

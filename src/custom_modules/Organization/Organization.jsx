@@ -1,9 +1,6 @@
 import React from 'react'
 import {
     Form,
-    FormText,
-    InputGroup,
-    InputGroupAddon,
     Container,
     Nav,
     NavItem,
@@ -12,11 +9,6 @@ import {
     TabContent,
     Badge,
     Button,
-    Card,
-    CardHeader,
-    CardBody,
-    CardFooter,
-    CardTitle,
     Label,
     FormGroup,
     Input,
@@ -34,7 +26,7 @@ import classnames from 'classnames';
 import ReactTable from "react-table";
 import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
-import { getOrganizations } from './organizationAction'
+import { getOrganizations, create, getOrgTypes, updateOrg, archiveOrg, } from './organizationAction'
 import { reduxInput, reduxTextarea } from '../../components/reduxInput/reduxInput';
 import { reduxDatepicker } from '../../components/reduxDatePicker/reduxDatepicker';
 import { from } from 'rxjs';
@@ -45,6 +37,7 @@ const initialState = {
     orgType: '',
     orgTimeZone: '',
     orgPlan: '',
+    editMode: false,
     modalVisible: false,
     modalHeader: '',
     activeTab: '1',
@@ -57,34 +50,6 @@ const initialState = {
         organization_timezone: 'Dhaka, Bangladesh UTC +6',
         organization_plan: 'Monitored',
     }],
-    OrganizationList: [{
-        id: '1',
-        organization_name: 'Spacesoft',
-        organization_address: '100/4, road-6, Hubstaff',
-        organization_type: 'Software Industry',
-        organization_timezone: 'Dhaka, Bangladesh UTC +6',
-        organization_plan: 'Monitored',
-
-    },
-    {
-        id: '2',
-        organization_name: 'STN Technologies',
-        organization_address: '100/4, road-6, Hubstaff',
-        organization_type: 'Construction',
-        organization_timezone: 'Dhaka, Bangladesh UTC +6',
-        organization_plan: 'Unmonitored',
-
-    },
-    {
-        id: '3',
-        organization_name: 'Spacesoft',
-        organization_address: '100/4, road-6, Hubstaff',
-        organization_type: 'Healthcare',
-        organization_timezone: 'Dhaka, Bangladesh UTC +6',
-        organization_plan: 'Unmonitored Field Service',
-
-    },
-    ]
 }
 
 class Organization extends React.Component {
@@ -96,17 +61,42 @@ class Organization extends React.Component {
     }
     componentDidMount() {
         this.props.organizations()
+        this.props.getOrgTypes()
     }
 
     handleChange = (e) => {
         console.log(e.target.name);
         this.setState({ [e.target.name]: e.target.value });
-        console.log(this.state);
     }
 
-    handleSubmit = () => {
-        console.log('open a modal');
+    handleSubmit = (e) => {
+        e.preventDefault()
+        const { orgName, orgAddress, orgType, orgTimeZone, orgPlan } = this.state;
+        let obj = {
+            name: orgName,
+            description: "asdfsdf",
+            address: orgAddress,
+            timezone: "UTC+03",
+            // logo": base64 image png, jpeg or jpeg, 
+            organization_type: orgType,
+            is_active: true
+        }
+        if (this.state.editMode === false) {
+            this.props.createOrg(obj)
+        }
+        else {
+            const payload = {
+                id: this.state.id,
+                obj
+            }
+            this.props.updateOrganization(payload)
+        }
+
+
+        // :
+        // 
     }
+
 
     toggle = (tab) => {
         if (this.state.activeTab !== tab) {
@@ -122,12 +112,18 @@ class Organization extends React.Component {
 
     addArchive = () => {
         console.log('add to archived');
+        let obj = {
+         
+        }
+        // this.props.archiveOrg
     }
     editModal = (row) => {
-        // console.log(row.original)
+        console.log(row.original.id)
         this.setState({
+            id: row.original.id,
+            editMode: true,
             modalVisible: !this.state.modalVisible,
-            orgName: row.original.organization_name,
+            orgName: row.original.name,
             orgAddress: row.original.organization_address,
             orgType: row.original.organization_type,
             orgTimeZone: row.original.organization_timezone,
@@ -138,6 +134,7 @@ class Organization extends React.Component {
     toggleModal = () => {
         this.setState({
             modalVisible: !this.state.modalVisible,
+            editMode: false,
         })
     }
 
@@ -148,6 +145,7 @@ class Organization extends React.Component {
         })
     }
     render() {
+        const { organizationsList, orgTypes } = this.props
         const { modalVisible, modalHeader, OrganizationList, archived } = this.state;
         return (
             <>
@@ -172,9 +170,12 @@ class Organization extends React.Component {
                                     <Label for="organizationType" sm={4}>Organization Type</Label>
                                     <Col sm={8}>
                                         <Input value={this.state.orgType} type="select" onChange={this.handleChange} style={{ marginTop: '0px' }} name="orgType" id="organizationType">
-                                            <option>Software Industry</option>
-                                            <option>Construction</option>
-                                            <option>Healthcare</option>
+                                            {
+                                                orgTypes && orgTypes.map((types, i) => (
+                                                    <option key={i} value={types.id}>{types.name}</option>
+                                                ))
+                                            }
+
                                         </Input>
                                     </Col>
                                 </FormGroup>
@@ -236,7 +237,7 @@ class Organization extends React.Component {
                                 <Col sm={12}>
                                     <ReactTable
                                         pageSizeOptions={[10, 20, 50]}
-                                        data={OrganizationList}
+                                        data={organizationsList && organizationsList}
                                         columns={[
                                             {
                                                 Header: () => (
@@ -246,7 +247,7 @@ class Organization extends React.Component {
                                                 ),
                                                 headerClassName: 'text-center',
                                                 sortable: false,
-                                                accessor: "organization_name",
+                                                accessor: "name",
                                                 Cell: row => (
                                                     <div className='text-center'>
                                                         <span className='text-center'>
@@ -472,13 +473,19 @@ class Organization extends React.Component {
     }
 }
 const mapStateToProps = (state) => {
+    console.log(state.organizations)
     return {
-        state
+        organizationsList: state.organizations.organizatins,
+        orgTypes: state.organizations.orgTypes
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        organizations: (payload) => { dispatch(getOrganizations(payload)) }
+        organizations: (payload) => { dispatch(getOrganizations(payload)) },
+        createOrg: (payload) => { dispatch(create(payload)) },
+        getOrgTypes: (payload) => { dispatch(getOrgTypes(payload)) },
+        updateOrganization: (payload) => { dispatch(updateOrg(payload)) },
+        archive: (payload) => { dispatch(archiveOrg(payload)) }
     }
 }
 

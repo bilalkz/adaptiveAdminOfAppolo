@@ -1,0 +1,95 @@
+##API ENDPOINTS FOR ORGANIZATION MODULE
+
+#############################################################
+
+
+## get organizatoin types
+    URL: http://104.248.151.204:81000/api/organization_types/
+    Allowed methods: GET
+    Response: [
+        { "id": organization_type id, "name": organization type name},
+        ... ... ...
+    ]
+    Response: status=200 OK
+            status= 404 NOT FOUND
+            status = 401 UNAUTHORIZED 
+
+## list of organizatin
+    URL: http://104.248.151.204:81000/api/organization_list/
+    Allowed method types: GET
+    GET parameters: None
+    Returns a list of all organizations the logged in user is either a member or owner
+    Return value: status=200 and an example return value is as follows:
+     [
+            {"id": "organization id", "name": "organizatoin_name"},
+            {"id": "organization id", "name": "organizatoin_name"},
+            {"id": "organization id", "name": "organizatoin_name"},
+        ]
+
+
+## create an organizatoin
+    URL: http://104.248.151.204:81000/api/organization/
+    Allowed method types: POST
+    POST parameters: {
+        "name": organization name, 
+        "description": organizatin description, 
+        "address": organization address, 
+        "timezone": organization timezone, 
+        "logo": base64 image png, jpeg or jpeg, 
+        "organization_type_name": organizatin_type id
+        "is_active": true or false
+    }
+    name must be alphanumeric
+    The logo must be 200x200 in size
+    Creates an organization_type instance for the organization with the given organization_type_name
+    Creates a default configuration for the organization
+    Sets the logged in user as the owner of the organization
+    Return:
+    In case user does not have permission returns: status=401 UNATUHROIZED
+    In case of errors returns: status=400, field_errors and non_field_errors
+    In case of success returns: status=201, organization_data
+
+
+##Get organization details
+    URL: http://104.248.151.204:81000/api/organization/<pk>/ where pk is the organization_id
+    Allowed method types: GET
+    Return:{
+        "id": organizatin id, 
+        "name": organization name, 
+        "description": organizatin description, 
+        "address": organization address, 
+        "timezone": organization timezone, 
+        "logo": logo url, 
+        "organization_type_name": organizatin_type id
+    }
+    In case user does not have permission returns: status=403
+    In case of errors returns: status=400, field_errors and non_field_errors
+    In case of success returns: status=200, organization_data
+
+##update organization details
+    URL: http://104.248.151.204:81000/api/organization/<pk>/ where pk is the organization_id
+    Allowed method: PUT/PATCH
+    Paremeters:{
+        "name": organization name, 
+        "description": organizatin description, 
+        "address": organization address, 
+        "timezone": organization timezone, 
+        "logo": base64 image png, jpeg or jpeg, 
+        "organization_type_name": organizatin_type id,
+        "is_active": true or false
+    }
+    In case user does not have permission returns: status=403
+    In case of errors returns: status=400, field_errors and non_field_errors
+    In case of success returns: status=200, organization_data
+
+
+#archive/unarchive organizatoins
+    URL: http://104.248.151.204:81000/api/organization/<pk>/ where pk is the organization_id
+    Allowed method: PATCH
+    parameters: {"is_active": false} to archive 
+                {"is_active": true} to unarchive
+    In case user does not have permission returns: status=403
+    In case of errors returns: status=400, field_errors and non_field_errors
+    In case of success returns: status=200, organization_data
+
+    
