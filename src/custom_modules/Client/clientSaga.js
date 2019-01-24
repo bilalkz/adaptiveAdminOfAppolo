@@ -19,9 +19,10 @@ import {
 export function* index() {
     try {
         const response = yield call(clients);
-        console.log(response, `this is from client saga`);
+
         if (response) {
-            yield put(a.getClientListSuccess(response))
+            console.log(response, `this is from client saga`);
+            yield put(a.getClientListSuccess(response.data))
         }
 
     }
@@ -35,7 +36,9 @@ export function* create({ payload }) {
     try {
         const response = yield call(createClient, payload);
         if (response) {
-            yield put(a.createSuccess(response));
+            console.log(response)
+            yield index()
+            yield put(a.createSuccess());
         }
     } catch (error) {
         yield put(a.createFail(error))
@@ -47,24 +50,15 @@ export function* update({ payload }) {
     try {
         const response = yield call(updateClient, payload);
         if (response) {
-            yield put(a.updateSuccess(response))
+            yield put(a.updateSuccess())
+            yield index()
         }
     } catch (error) {
         yield put(a.updateFail(error))
     }
 }
 
-//search sagas
-export function* search({ payload }) {
-    try {
-        const response = yield call(searchClient, payload)
-        if (response) {
-            yield put(a.searchSuccess(response))
-        }
-    } catch (error) {
-        yield put(a.searchFail(error))
-    }
-}
+
 
 //unArchived sagas
 export function* unArchived({ payload }) {
@@ -83,7 +77,6 @@ export default function* root() {
         takeLatest(GET_CLIENT_LIST, index),
         takeLatest(CREATE_CLIENT, create),
         takeLatest(UPDATE_CLIENT, update),
-        takeLatest(SEARCH_CLIENT, search),
         takeLatest(UNARCHIVE_CLIENT, unArchived),
     ]);
 }

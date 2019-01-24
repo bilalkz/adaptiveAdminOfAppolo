@@ -12,7 +12,8 @@ import timesheetApprovalsReducer from './custom_modules/TimesheetApproval/timesh
 import signupConfirmationReducer from './custom_modules/SignUpConfirmation/signupConfirmationReducer';
 import profileReducer from './custom_modules/UserProfile/userProfileReducer';
 import projectReducer from './custom_modules/Projects/projectReducer';
-import orgainzationReducer from './custom_modules/Organization/orgReducer'
+import orgainzationReducer from './custom_modules/Organization/orgReducer';
+import clientReducer from './custom_modules/Client/clientReducer'
 import { reducer as formReducer } from 'redux-form'
 
 const authPersistConfig = {
@@ -35,6 +36,7 @@ export default (history) => combineReducers({
     signupConfirmation: signupConfirmationReducer,
     profile: profileReducer,
     project: projectReducer,
-    organizations: orgainzationReducer
+    organizations: orgainzationReducer,
+    clientReducer: clientReducer
 
 });

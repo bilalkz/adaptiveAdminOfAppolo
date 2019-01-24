@@ -36,9 +36,11 @@ import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { reduxInput, reduxTextarea } from '../../components/reduxInput/reduxInput';
 import { reduxDatepicker } from '../../components/reduxDatePicker/reduxDatepicker';
 import { connect } from 'react-redux';
-import { getClient } from './clientAction';
+import { getClient, update, create, unArchived } from './clientAction';
 
 const initialState = {
+    id: '',
+    editMode: false,
     clientName: '',
     clientAddress: '',
     clientEmail: '',
@@ -56,31 +58,11 @@ const initialState = {
         client_organization: 'Spacesoft',
         client_contact: '+800 1234 1234',
     }],
-    ClientList: [{
-        id: '1',
-        client_name: 'Spacesoft',
-        client_address: '100/4, road-6, Hubstaff',
-        client_email: 'Software Industry',
-        client_organization: 'Spacesoft',
-        client_contact: '+800 1234 1234',
-    },
-    {
-        id: '2',
-        client_name: 'Spacesoft',
-        client_address: '100/4, road-6, Hubstaff',
-        client_email: 'Software Industry',
-        client_organization: 'Spacesoft',
-        client_contact: '+800 1234 1234',
-    },
-    {
-        id: '3',
-        client_name: 'Spacesoft',
-        client_address: '100/4, road-6, Hubstaff',
-        client_email: 'Software Industry',
-        client_organization: 'Spacesoft',
-        client_contact: '+800 1234 1234',
-    },
-    ]
+    ClientList: [],
+    is_active: false,
+    searchTerm: '',
+    searchLoading: '',
+    searchResult: [],
 }
 
 
@@ -95,17 +77,43 @@ class Client extends React.Component {
             ...initialState
         }
     }
-
+    UNSAFE_componentWillReceiveProps(props) {
+        console.log(props.done)
+        if (this.props.done === false && props.done === true) {
+            this.setState({
+                modalVisible: false
+            })
+        }
+    }
     handleChange = (e) => {
         console.log(e.target.name);
         this.setState({ [e.target.name]: e.target.value });
         console.log(this.state);
     }
 
-    handleSubmit = () => {
-        console.log('open a modal');
+    handleSubmit = (e) => {
+        e.preventDefault()
+        const { clientName, clientAddress, clientEmail, clientOrganization, clientContact } = this.state;
+        let obj = {
+            name: clientName,
+            client_organization: clientOrganization,
+            address: clientAddress,
+            description: '',
+            email: clientEmail,
+            // contact: clientContact,
+            organization: `4457e6ce-0e21-4342-8779-6e409e44c17c`
+        }
+        if (this.state.editMode === false) {
+            this.props.create(obj)
+        }
+        else {
+            const payload = {
+                id: this.state.id,
+                obj
+            }
+            this.props.update(payload)
+        }
     }
-
     componentDidMount() {
         this.props.clientsList();
     }
@@ -118,8 +126,16 @@ class Client extends React.Component {
         }
     }
 
-    addArchive = () => {
+    addArchive = (row) => {
+        this.setState({
+            is_active: !this.state.is_active
+        })
         console.log('add to archived');
+        let obj = {
+            id: row.original.id,
+            is_active: this.state.is_active
+        }
+        this.props.archive(obj)
     }
 
     unArchive = () => {
@@ -127,20 +143,22 @@ class Client extends React.Component {
     }
 
     editModal = (row) => {
-        // console.log(row.original)
         this.setState({
+            id: row.original.id,
+            editMode: true,
             modalVisible: !this.state.modalVisible,
-            clientName: row.original.client_name,
-            clientAddress: row.original.client_address,
-            clientEmail: row.original.client_email,
+            clientName: row.original.name,
+            clientAddress: row.original.address,
+            clientEmail: row.original.email,
             clientOrganization: row.original.client_organization,
-            clientContact: row.original.client_contact
+            clientContact: row.original.contact
         })
     }
 
     toggleModal = () => {
         this.setState({
             modalVisible: !this.state.modalVisible,
+            editMode: false,
         })
     }
 
@@ -150,12 +168,34 @@ class Client extends React.Component {
             modalVisible: true
         })
     }
+    handleSearchChange = (event) => {
+        this.setState({
+            searchTerm: event.target.value,
+            searchLoading: true,
+        }, () => this.handleSearch())
+    }
+
+    handleSearch = () => {
+        console.log(this.props.clients)
+        const regex = new RegExp(this.state.searchTerm, 'gi');
+        const searchResult = this.props.clients.reduce((acc, org) => {
+            console.log("======", acc, org)
+            if (org.name && org.name.match(regex)) {
+                acc.push(org);
+            }
+            return acc;
+        }, [])
+        this.setState({ searchResult })
+        setTimeout(() => this.setState({ searchLoading: false }), 500)
+    }
     render() {
-        const { modalVisible, modalHeader, ClientList, archived } = this.state;
+        // console.log(this.props.clients)
+        const { clients } = this.props;
+        const { modalVisible, modalHeader, ClientList, archived, searchTerm, searchResult } = this.state;
         return (
             <>
                 <div className="content">
-                    <Modal backdrop={false} isOpen={modalVisible} toggle={this.toggleModal} style={{ width: '100%' }} className='add-project-modal'>
+                    <Modal backdrop={true} isOpen={modalVisible} toggle={this.toggleModal} style={{ width: '100%' }} className='add-project-modal'>
                         <ModalHeader toggle={this.toggleModal}>Add Client</ModalHeader>
                         <ModalBody>
                             <Form onSubmit={this.handleSubmit}>
@@ -174,23 +214,19 @@ class Client extends React.Component {
                                 <FormGroup row>
                                     <Label for="organizationType" sm={4}>Email</Label>
                                     <Col sm={8}>
-                                        <Input value={this.state.clientEmail} type="select" onChange={this.handleChange} style={{ marginTop: '0px' }} name="clientEmail" id="organizationType">
-                                            <option>Software Industry</option>
-                                            <option>Construction</option>
-                                            <option>Healthcare</option>
-                                        </Input>
+                                        <Input value={this.state.clientEmail} onChange={this.handleChange} style={{ marginTop: '0px' }} name="clientEmail" id="organizationType" />
                                     </Col>
                                 </FormGroup>
                                 <FormGroup row>
                                     <Label for="timezone" sm={4}>Organization</Label>
                                     <Col sm={8}>
-                                        <Input value={this.state.clientOrganization} type="select" onChange={this.handleChange} style={{ marginTop: '0px' }} name="clientOrganization" id="timezone" />
+                                        <Input value={this.state.clientOrganization} onChange={this.handleChange} style={{ marginTop: '0px' }} name="clientOrganization" id="timezone" />
                                     </Col>
                                 </FormGroup>
                                 <FormGroup row>
                                     <Label for="plan" sm={4}>Contact</Label>
                                     <Col sm={8}>
-                                        <Input type="select" onChange={this.handleChange} value={this.state.clientContact} style={{ marginTop: '0px' }} name="clientContact" id="type">
+                                        <Input onChange={this.handleChange} value={this.state.clientContact} style={{ marginTop: '0px' }} name="clientContact" id="type">
                                             <option>Monitored</option>
                                             <option>Unmonitored</option>
                                             <option>Unmonitored Field Service</option>
@@ -229,7 +265,7 @@ class Client extends React.Component {
                         </NavLink>
                                 </NavItem>
                             </Nav>
-                            <Input style={{ marginLeft: '10px', height: '36px', width: '30%', marginTop: '0px' }} placeholder="search" />
+                            <Input onChange={(e) => this.handleSearchChange(e)} style={{ marginLeft: '10px', height: '36px', width: '30%', marginTop: '0px' }} placeholder="search" />
                             <Button className="btn-add" style={{ marginTop: '0px', borderRadius: '0' }} onClick={this.openModal}>Add Client</Button>
                         </Row>
                     </Container>
@@ -239,7 +275,7 @@ class Client extends React.Component {
                                 <Col sm={12}>
                                     <ReactTable
                                         pageSizeOptions={[10, 20, 50]}
-                                        data={ClientList}
+                                        data={searchTerm ? searchResult : clients && clients}
                                         columns={[
                                             {
                                                 Header: () => (
@@ -249,7 +285,7 @@ class Client extends React.Component {
                                                 ),
                                                 headerClassName: 'text-center',
                                                 sortable: false,
-                                                accessor: "client_name",
+                                                accessor: "name",
                                                 Cell: row => (
                                                     <div className='text-center'>
                                                         <span className='text-center'>
@@ -266,7 +302,7 @@ class Client extends React.Component {
                                                 ),
                                                 headerClassName: 'text-center',
                                                 sortable: false,
-                                                accessor: "client_address",
+                                                accessor: "address",
                                                 Cell: row => (
                                                     <div className='text-center'>
                                                         <span className='text-center'>
@@ -283,7 +319,7 @@ class Client extends React.Component {
                                                 ),
                                                 headerClassName: 'text-center',
                                                 sortable: false,
-                                                accessor: "client_email",
+                                                accessor: "email",
                                                 Cell: row => (
                                                     <div className='text-center'>
                                                         <span className='text-center'>
@@ -339,7 +375,7 @@ class Client extends React.Component {
                                                     <div className='text-center'>
                                                         <span>
                                                             <i className='fa fa-edit editProject' onClick={() => this.editModal(row)} />
-                                                            <Button outline color="primary" size="sm" onClick={this.addArchive}>Archive</Button>
+                                                            <Button outline color="primary" size="sm" onClick={() => this.addArchive(row)}>Archive</Button>
                                                         </span>
                                                     </div>
                                                 )
@@ -475,11 +511,19 @@ class Client extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    clients: state.clients,
-})
+const mapStateToProps = (state) => {
+    console.log(state.clientReducer)
+    return {
+        clients: state.clientReducer.clients,
+        done: state.clientReducer.done
+    }
+}
 
 const mapDispatchToProps = (dispatch) => ({
-    clientsList: () => { dispatch(getClient()) }
+    clientsList: () => { dispatch(getClient()) },
+    update: (payload) => { dispatch(update(payload)) },
+    create: (payload) => { dispatch(create(payload)) },
+    archive: (payload) => { dispatch(unArchived(payload)) },
+    // search: () => { dispatch() }
 })
 export default connect(mapStateToProps, mapDispatchToProps)(Client);

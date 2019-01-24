@@ -10,7 +10,8 @@ import {
     SEARCH_CLIENT_FAIL,
     UNARCHIVE_CLIENT,
     UNARCHIVE_CLIENT_SUCCESS,
-    UNARCHIVE_CLIENT_FAIL
+    UNARCHIVE_CLIENT_FAIL,
+    UPDATE_CLIENT_SUCCESS
 } from '../../modules/constants';
 
 const initialState = {
@@ -18,6 +19,7 @@ const initialState = {
     errors: [],
     clients: [],
     unArchived: [],
+    done: false
 }
 
 const clientsReducer = (state = initialState, action) => {
@@ -26,6 +28,7 @@ const clientsReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: true,
+                done: false
             }
         case GET_CLIENT_LIST_SUCCESS:
             return {
@@ -39,6 +42,12 @@ const clientsReducer = (state = initialState, action) => {
                 loading: false,
                 errors: action.payload,
             }
+        case UPDATE_CLIENT_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                done: true
+            }
         case CREATE_CLIENT:
             return {
                 ...state,
@@ -48,7 +57,7 @@ const clientsReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
-                clients: action.payload,
+                done: true
             }
         case CREATE_CLIENT_FAIL:
             return {

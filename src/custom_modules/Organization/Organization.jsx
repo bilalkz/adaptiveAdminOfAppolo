@@ -50,6 +50,7 @@ const initialState = {
         organization_timezone: 'Dhaka, Bangladesh UTC +6',
         organization_plan: 'Monitored',
     }],
+    is_active: false
 }
 
 class Organization extends React.Component {
@@ -91,10 +92,6 @@ class Organization extends React.Component {
             }
             this.props.updateOrganization(payload)
         }
-
-
-        // :
-        // 
     }
 
 
@@ -110,12 +107,16 @@ class Organization extends React.Component {
         console.log('this is unarchive');
     }
 
-    addArchive = () => {
+    addArchive = (row) => {
+        this.setState({
+            is_active: !this.state.is_active
+        })
         console.log('add to archived');
         let obj = {
-         
+            id: row.original.id,
+            is_active: this.state.is_active
         }
-        // this.props.archiveOrg
+        this.props.archive(obj)
     }
     editModal = (row) => {
         console.log(row.original.id)
@@ -150,7 +151,7 @@ class Organization extends React.Component {
         return (
             <>
                 <div className="content">
-                    <Modal backdrop={false} isOpen={modalVisible} toggle={this.toggleModal} style={{ width: '100%' }} className='add-project-modal'>
+                    <Modal backdrop={true} isOpen={modalVisible} toggle={this.toggleModal} style={{ width: '100%' }} className='add-project-modal'>
                         <ModalHeader toggle={this.toggleModal}>Add Organization</ModalHeader>
                         <ModalBody>
                             <Form onSubmit={this.handleSubmit}>
@@ -337,7 +338,7 @@ class Organization extends React.Component {
                                                     <div className='text-center'>
                                                         <span>
                                                             <i className='fa fa-edit editProject' onClick={() => this.editModal(row)} />
-                                                            <Button outline color="primary" size="sm" onClick={this.addArchive}>Archive</Button>
+                                                            <Button outline color="primary" size="sm" onClick={() => this.addArchive(row)}>Archive</Button>
                                                         </span>
                                                     </div>
                                                 )
