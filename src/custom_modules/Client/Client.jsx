@@ -35,6 +35,8 @@ import ReactTable from "react-table";
 import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { reduxInput, reduxTextarea } from '../../components/reduxInput/reduxInput';
 import { reduxDatepicker } from '../../components/reduxDatePicker/reduxDatepicker';
+import { connect } from 'react-redux';
+import { getClient } from './clientAction';
 
 const initialState = {
     clientName: '',
@@ -102,6 +104,10 @@ class Client extends React.Component {
 
     handleSubmit = () => {
         console.log('open a modal');
+    }
+
+    componentDidMount() {
+        this.props.clientsList();
     }
 
     toggle = (tab) => {
@@ -346,7 +352,7 @@ class Client extends React.Component {
                             </Row>
                         </TabPane>
                         <TabPane tabId="2">
-                        <Row>
+                            <Row>
                                 <Col sm={12}>
                                     <ReactTable
                                         pageSizeOptions={[10, 20, 50]}
@@ -469,4 +475,11 @@ class Client extends React.Component {
     }
 }
 
-export default Client;
+const mapStateToProps = (state) => ({
+    clients: state.clients,
+})
+
+const mapDispatchToProps = (dispatch) => ({
+    clientsList: () => { dispatch(getClient()) }
+})
+export default connect(mapStateToProps, mapDispatchToProps)(Client);

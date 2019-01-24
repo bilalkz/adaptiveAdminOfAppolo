@@ -1,24 +1,24 @@
 import axios from 'axios';
 
 //clients api
-const baseURL = 'http://104.248.151.204:8100/api'
+const clientBaseURL = 'http://104.248.151.204:8100/api'
 // create client post 
-export const createClient = (payload) => axios.post(`${baseURL}/client/`, payload);
+export const createClient = (payload) => axios.post(`${clientBaseURL}/client/`, payload);
 
 //clients list
-export const clientsList = (id) => axios.get(`${baseURL}/clients/${id}`);
+export const clientsList = (id) => axios.get(`${clientBaseURL}/clients/${id}`);
 
 //searct clients
-export const searchClient = (id) => axios.get(`${baseURL}/clients/${id}`);
+export const searchClient = (id) => axios.get(`${clientBaseURL}/clients/${id}`);
 
 //clients detailes
-export const clientDetail = (id) => axios.get(`${baseURL}/client/${id}`);
+export const clientDetail = (id) => axios.get(`${clientBaseURL}/client/${id}`);
 
 //client edit
-export const clientEdit = (id, payload) => axios.put(`${baseURL}/client/${id}`, payload);
+export const clientEdit = (id, payload) => axios.put(`${clientBaseURL}/client/${id}`, payload);
 
 //archive unarchive
-export const archiveUnAchinveClient = (id, payload) => axios.patch(`${baseURL}/client/${id}`, payload);
+export const archiveUnAchinveClient = (id, payload) => axios.patch(`${clientBaseURL}/client/${id}`, payload);
 
 
 // organization
@@ -75,7 +75,7 @@ function makeHeaderWithToken() {
 }
 
 const api = axios.create({
-    baseURL: baseURL,
+    baseURL: baseURLOrganization,
     headers: token ? makeHeaderWithToken() : makeHeaders(),
 });
 

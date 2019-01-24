@@ -10,6 +10,7 @@ import signupConfirmationSagas from './custom_modules/SignUpConfirmation/signupC
 import profileSagas from './custom_modules/UserProfile/userProfileSagas';
 import projectSagas from './custom_modules/Projects/projectSagas';
 import OrganizationSagas from './custom_modules/Organization/organizationSaga'
+import ClientSaga from './custom_modules/Client/clientSaga';
 
 /**
  * rootSaga
@@ -27,5 +28,6 @@ export default function* root() {
         fork(profileSagas),
         fork(projectSagas),
         fork(OrganizationSagas),
+        fork(ClientSaga)
     ]);
 }
