@@ -150,7 +150,7 @@ class Client extends React.Component {
             <>
                 <div className="content">
                     <Modal backdrop={false} isOpen={modalVisible} toggle={this.toggleModal} style={{ width: '100%' }} className='add-project-modal'>
-                        <ModalHeader toggle={this.toggleModal}>Add Organization</ModalHeader>
+                        <ModalHeader toggle={this.toggleModal}>Add Client</ModalHeader>
                         <ModalBody>
                             <Form onSubmit={this.handleSubmit}>
                                 <FormGroup row>
@@ -224,7 +224,7 @@ class Client extends React.Component {
                                 </NavItem>
                             </Nav>
                             <Input style={{ marginLeft: '10px', height: '36px', width: '30%', marginTop: '0px' }} placeholder="search" />
-                            <Button className="btn-add" style={{ marginTop: '0px', borderRadius: '0' }} onClick={this.openModal}>Add Organization</Button>
+                            <Button className="btn-add" style={{ marginTop: '0px', borderRadius: '0' }} onClick={this.openModal}>Add Client</Button>
                         </Row>
                     </Container>
                     <TabContent activeTab={this.state.activeTab}>
