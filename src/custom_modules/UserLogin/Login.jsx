@@ -33,7 +33,7 @@ class Login extends React.Component {
   }
   //depricated function
   // 
- 
+
   // componentWillMount() {
   //   const { history } = this.props;
   //   let token = sessionStorage.getItem('access_token')
@@ -91,13 +91,13 @@ class Login extends React.Component {
   //     loginRedirectReset()
   //   }
   // }
-//componentDidUpdate(prevProps, prevState, snapshot)
-// Todo: login page is not updating properly
+  //componentDidUpdate(prevProps, prevState, snapshot)
+  // Todo: login page is not updating properly
   componentDidUpdate = (prevProps, prevState) => {
     const { loginRedirectReset, auth, history } = prevProps
     console.log('prevState', prevProps);
     if (this.props.auth.redirect) {
-      if(this.props.auth.auth.user_profile !== 'undefined') {
+      if (this.props.auth.auth.user_profile !== 'undefined') {
         history.push('/admin/dashboard');
         loginRedirectReset()
       }
@@ -105,7 +105,7 @@ class Login extends React.Component {
         history.push('/admin/my-profile');
         loginRedirectReset()
       }
-     
+
     }
   }
 
@@ -135,6 +135,7 @@ class Login extends React.Component {
   // if success redirect to next pages
   handleLogin = () => {
     const { username, password } = this.state;
+    debugger
     if (username === '') {
       createNotification('error', 'Username required', 3000);
     } else if (password === '') {
@@ -146,81 +147,82 @@ class Login extends React.Component {
 
   render() {
     //console.log('login render',this.props);
-    const {auth} = this.props;
-    console.log('authentication show',auth)
+    console.log(this.state.username, this.state.password)
+    const { auth } = this.props;
+    console.log('authentication show', auth)
     const { username, password, rememberMe } = this.state;
     console.log('auth data', auth);
     return (
       <div className="login-page">
-      {auth.isLoading && <Loader/>}
+        {auth.isLoading && <Loader />}
 
-          <Row>
-            <Col className="" lg="6" sm="12">
+        <Row>
+          <Col className="" lg="6" sm="12">
             <Card className="card d-none d-sm-block" id="leftImg" >
-             <img src={img1} className="login-img" id="leftImg" />  
-             </Card>
-             
-          
-            </Col>
+              <img src={img1} className="login-img" id="leftImg" />
+            </Card>
 
-            <Col className="mr-auto ml-auto" lg="4" md="12">
+
+          </Col>
+
+          <Col className="mr-auto ml-auto" lg="4" md="12">
             <Row>
-            <Col lg="10" md="12" sm="12">               
+              <Col lg="10" md="12" sm="12">
                 <Card className="card-login text-center offset-md-2" style={{
-                  marginTop:'170px'
+                  marginTop: '170px'
                 }}>
-                 <Form className="form">
-                  <CardHeader>
+                  <Form className="form">
                     <CardHeader>
-                     <Row>
-                       <Col lg="12" md="12">
-                      <img src={logo}/>
-                       </Col>
-                     </Row>
+                      <CardHeader>
+                        <Row>
+                          <Col lg="12" md="12">
+                            <img src={logo} />
+                          </Col>
+                        </Row>
+                      </CardHeader>
                     </CardHeader>
-                  </CardHeader>
-                  <CardBody>
-                    <CustomFormgroup type="text" placeholder="Username" onChangeHandler={e => this.onTextChange(e)} value={username} name="username"/>
-                    <CustomFormgroup type="password" placeholder="Password" onChangeHandler={e => this.onTextChange(e)} value={password} name="password"
-                   />
-                    <br />
+                    <CardBody>
+                      <CustomFormgroup type="text" placeholder="Username" onChangeHandler={e => this.onTextChange(e)} value={username} name="username" />
+                      <CustomFormgroup type="password" placeholder="Password" onChangeHandler={e => this.onTextChange(e)} value={password} name="password"
+                      />
+                      <br />
 
-                  </CardBody>
-                  <CardFooter>
-                    <CustomButton
-                      classname=" mb-3 btn btn-md btn-block login-button"
-                      onClickHandler={() => {
-                        // this.handleLogin()
-                        //TODO: HADLE LOGIN 
-                        this.handleLogin();
-                      }}
-                      text="Sign in"
-                    />
-                    <Row>
-                      <Col className='text-right' style={{
-                        fontSize:'20px',
-                        fontFamily:'Myriad Pro-Regular'
-                      
-                      }}>
-                       <Link className='link-forgot' to='/auth/forgot-password'> Forgot password ?</Link>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col className='text-center register' style={{
-                         fontSize:'20px',
-                         color: '#ccc',
-                         fontFamily: 'Myriad Pro-Regular'
-                      }}>
-                        Don't Have an Account? Register<Link className='link-color' to='/auth/register'>here</Link>
-                      </Col>
-                    </Row>
-                  </CardFooter>
+                    </CardBody>
+                    <CardFooter>
+                      <CustomButton
+                        classname=" mb-3 btn btn-md btn-block login-button"
+                        onClickHandler={() => {
+                          // this.handleLogin()
+                          //TODO: HADLE LOGIN 
+                          this.handleLogin();
+                        }}
+                        text="Sign in"
+                      />
+                      <Row>
+                        <Col className='text-right' style={{
+                          fontSize: '20px',
+                          fontFamily: 'Myriad Pro-Regular'
+
+                        }}>
+                          <Link className='link-forgot' to='/auth/forgot-password'> Forgot password ?</Link>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col className='text-center register' style={{
+                          fontSize: '20px',
+                          color: '#ccc',
+                          fontFamily: 'Myriad Pro-Regular'
+                        }}>
+                          Don't Have an Account? Register<Link className='link-color' to='/auth/register'>here</Link>
+                        </Col>
+                      </Row>
+                    </CardFooter>
                   </Form>
                 </Card>
               </Col>
-              </Row>
-              </Col>
-          </Row>
+            </Row>
+          </Col>
+        </Row>
 
         <div
           className="full-page-background"

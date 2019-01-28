@@ -1,5 +1,4 @@
 import api from '../../utils/api';
-
 const reqData = {
     method: 'GET',
     url: '',
@@ -7,7 +6,7 @@ const reqData = {
     formData: {},
     bodyParams: {},
     pathParams: [],
-    data:{}
+    data: {}
 };
 
 export function loginByApi(url, method, details) {
@@ -15,8 +14,8 @@ export function loginByApi(url, method, details) {
     loginDetails.url = url
     loginDetails.method = method;
     loginDetails.data = details;
-    return api(loginDetails)
+    return api(url, loginDetails)
         .then(response => response)
-       
+
 }
 

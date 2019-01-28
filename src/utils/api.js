@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 //clients api
-const clientBaseURL = 'http://104.248.151.204:8100/api'
+const clientBaseURL = 'http://104.248.151.204:8100/api';
 // create client post 
 export const createClient = (payload) => axios.post(`${clientBaseURL}/client/`, payload);
 
@@ -75,11 +75,10 @@ function makeHeaderWithToken() {
 }
 
 const api = axios.create({
-    baseURL: baseURLOrganization,
+    baseURL: URL,
     headers: token ? makeHeaderWithToken() : makeHeaders(),
 });
 
-console.log("apii=======", api)
 export default api;
 
 

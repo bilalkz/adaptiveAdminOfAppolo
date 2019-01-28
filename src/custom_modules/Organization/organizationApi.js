@@ -50,5 +50,5 @@ export function orgTypeApi(payload) {
 export const archiveendpoint = (payload) => {
     console.log(payload)
     return axios
-        .patch(`http://104.248.151.204:8100/api/organization/${payload.id}/`, payload.is_active, { headers: { Authorization: `${"Bearer" + " "}${token}` } })
+        .patch(`http://104.248.151.204:8100/api/organization/${payload.id}/`, { "is_active": payload.is_active }, { headers: { Authorization: `${"Bearer" + " "}${token}` } })
 }

@@ -37,6 +37,6 @@ export default (history) => combineReducers({
     profile: profileReducer,
     project: projectReducer,
     organizations: orgainzationReducer,
-    clientReducer: clientReducer
+    clientReducer: clientReducer,
 
 });

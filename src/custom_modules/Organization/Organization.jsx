@@ -53,6 +53,7 @@ const initialState = {
   searchResult: [],
   searchTerm: '',
   searchLoading: false,
+  archivedList: [],
 }
 
 class Organization extends React.Component {
@@ -86,6 +87,17 @@ class Organization extends React.Component {
     setTimeout(() => this.setState({ searchLoading: false }), 500)
   }
 
+  archivedList = () => {
+    const archivedList = this.props.organizationsList.reduce((acc, archived) => {
+      console.log(archived);
+      if (archived.is_active === true) {
+        acc.push(archived);
+      }
+      return acc;
+    }, [])
+    this.setState({ archivedList })
+  }
+
   handleChange = (e) => {
     console.log(e.target.name);
     this.setState({ [e.target.name]: e.target.value });
@@ -98,7 +110,7 @@ class Organization extends React.Component {
       name: orgName,
       description: "asdfsdf",
       address: orgAddress,
-      timezone: "UTC+03",
+      timezone: orgTimeZone,
       // logo": base64 image png, jpeg or jpeg, 
       organization_type: orgType,
       is_active: true
@@ -133,12 +145,17 @@ class Organization extends React.Component {
     console.log('this is unarchive');
   }
 
-  addArchive = () => {
+  addArchive = (row) => {
+    let id = row.original.id
+    let is_active = row.original.is_active;
     console.log('add to archived');
     let obj = {
-
+      id,
+      is_active: !is_active,
     }
-    // this.props.archiveOrg
+    if (obj) {
+      this.props.archive(obj);
+    }
   }
   editModal = (row) => {
     console.log(row.original.id)
@@ -207,17 +224,17 @@ class Organization extends React.Component {
                   <Col sm={8}>
                     <Input value={this.state.orgTimeZone} type="select" onChange={this.handleChange} style={{ marginTop: '0px' }} name="orgTimeZone" id="timezone">
 
-                      <option timeZoneId="1" gmtAdjustment="GMT-12:00" useDaylightTime="0" value="(GMT-12:00) International Date Line West">(GMT-12:00) International Date Line West</option>
-                      <option timeZoneId="2" gmtAdjustment="GMT-11:00" useDaylightTime="0" value="(GMT-11:00) Midway Island, Samoa">(GMT-11:00) Midway Island, Samoa</option>
-                      <option timeZoneId="3" gmtAdjustment="GMT-10:00" useDaylightTime="0" value="(GMT-10:00) Hawaii">(GMT-10:00) Hawaii</option>
-                      <option timeZoneId="4" gmtAdjustment="GMT-09:00" useDaylightTime="1" value="(GMT-09:00) Alaska">(GMT-09:00) Alaska</option>
-                      <option timeZoneId="5" gmtAdjustment="GMT-08:00" useDaylightTime="1" value="(GMT-08:00) Pacific Time (US & Canada)">(GMT-08:00) Pacific Time (US & Canada)</option>
-                      <option timeZoneId="6" gmtAdjustment="GMT-08:00" useDaylightTime="1" value="(GMT-08:00) Tijuana, Baja California">(GMT-08:00) Tijuana, Baja California</option>
-                      <option timeZoneId="7" gmtAdjustment="GMT-07:00" useDaylightTime="0" value="(GMT-07:00) Arizona">(GMT-07:00) Arizona</option>
-                      <option timeZoneId="8" gmtAdjustment="GMT-07:00" useDaylightTime="1" value="(GMT-07:00) Chihuahua, La Paz, Mazatlan">(GMT-07:00) Chihuahua, La Paz, Mazatlan</option>
-                      <option timeZoneId="9" gmtAdjustment="GMT-07:00" useDaylightTime="1" value="(GMT-07:00) Mountain Time (US & Canada)">(GMT-07:00) Mountain Time (US & Canada)</option>
-                      <option timeZoneId="10" gmtAdjustment="GMT-06:00" useDaylightTime="0" value="(GMT-06:00) Central America">(GMT-06:00) Central America</option>
-                      <option timeZoneId="11" gmtAdjustment="GMT-06:00" useDaylightTime="1" value="(GMT-06:00) Central Time (US & Canada)">(GMT-06:00) Central Time (US & Canada)</option>
+                      <option timeZoneId="1" gmtAdjustment="GMT-12:00" useDaylightTime="0" value="GMT-12">(GMT-12:00) International Date Line West</option>
+                      <option timeZoneId="2" gmtAdjustment="GMT-11:00" useDaylightTime="0" value="GMT-11">(GMT-11:00) Midway Island, Samoa</option>
+                      <option timeZoneId="3" gmtAdjustment="GMT-10:00" useDaylightTime="0" value="GMT-10">(GMT-10:00) Hawaii</option>
+                      <option timeZoneId="4" gmtAdjustment="GMT-09:00" useDaylightTime="1" value="GMT-09">(GMT-09:00) Alaska</option>
+                      <option timeZoneId="5" gmtAdjustment="GMT-08:00" useDaylightTime="1" value="GMT-08">(GMT-08:00) Pacific Time (US & Canada)</option>
+                      <option timeZoneId="6" gmtAdjustment="GMT-08:00" useDaylightTime="1" value="GMT-08">(GMT-08:00) Tijuana, Baja California</option>
+                      <option timeZoneId="7" gmtAdjustment="GMT-07:00" useDaylightTime="0" value="GMT-07">(GMT-07:00) Arizona</option>
+                      <option timeZoneId="8" gmtAdjustment="GMT-07:00" useDaylightTime="1" value="GMT-07">(GMT-07:00) Chihuahua, La Paz, Mazatlan</option>
+                      <option timeZoneId="9" gmtAdjustment="GMT-07:00" useDaylightTime="1" value="GMT-07">(GMT-07:00) Mountain Time (US & Canada)</option>
+                      <option timeZoneId="10" gmtAdjustment="GMT-06:00" useDaylightTime="0" value="GMT-06">(GMT-06:00) Central America</option>
+                      <option timeZoneId="11" gmtAdjustment="GMT-06:00" useDaylightTime="1" value="GMT-06">(GMT-06:00) Central Time (US & Canada)</option>
                     </Input>
 
                   </Col>
@@ -257,7 +274,7 @@ class Organization extends React.Component {
                 <NavItem>
                   <NavLink
                     className={classnames({ 'tab-active': this.state.activeTab === '2' })}
-                    onClick={() => { this.toggle('2'); }}
+                    onClick={() => { this.toggle('2'); this.archivedList() }}
                     style={{ cursor: 'pointer' }}
                   >
                     Archived
@@ -301,7 +318,7 @@ class Organization extends React.Component {
                         ),
                         headerClassName: 'text-center',
                         sortable: false,
-                        accessor: "organization_address",
+                        accessor: "address",
                         Cell: row => (
                           <div className='text-center'>
                             <span className='text-center'>
@@ -335,7 +352,7 @@ class Organization extends React.Component {
                         ),
                         headerClassName: 'text-center',
                         sortable: false,
-                        accessor: "organization_timezone",
+                        accessor: "timezone",
                         Cell: row => (
                           <div className='text-center'>
                             <span className='text-center'>
@@ -374,7 +391,11 @@ class Organization extends React.Component {
                           <div className='text-center'>
                             <span>
                               <i className='fa fa-edit editProject' onClick={() => this.editModal(row)} />
-                              <Button outline color="primary" size="sm" onClick={this.addArchive}>Archive</Button>
+                              {
+                                row.original.is_active
+                                  ? <Button outline color="danger" size="sm" onClick={() => this.addArchive(row)}>UnArchive</Button>
+                                  : <Button outline color="primary" size="sm" onClick={() => this.addArchive(row)}>Archive</Button>
+                              }
                             </span>
                           </div>
                         )
@@ -391,7 +412,7 @@ class Organization extends React.Component {
                 <Col sm={12}>
                   <ReactTable
                     pageSizeOptions={[10, 20, 50]}
-                    data={archived}
+                    data={this.state.archivedList && this.state.archivedList}
                     columns={[
                       {
                         Header: () => (
@@ -401,7 +422,7 @@ class Organization extends React.Component {
                         ),
                         headerClassName: 'text-center',
                         sortable: false,
-                        accessor: "organization_name",
+                        accessor: "name",
                         Cell: row => (
                           <div className='text-center'>
                             <span className='text-center'>
@@ -418,7 +439,7 @@ class Organization extends React.Component {
                         ),
                         headerClassName: 'text-center',
                         sortable: false,
-                        accessor: "organization_address",
+                        accessor: "address",
                         Cell: row => (
                           <div className='text-center'>
                             <span className='text-center'>
@@ -452,7 +473,7 @@ class Organization extends React.Component {
                         ),
                         headerClassName: 'text-center',
                         sortable: false,
-                        accessor: "organization_timezone",
+                        accessor: "timezone",
                         Cell: row => (
                           <div className='text-center'>
                             <span className='text-center'>
@@ -491,7 +512,7 @@ class Organization extends React.Component {
                           <div className='text-center'>
                             <span>
                               <i className='fa fa-edit editProject' onClick={() => this.editModal(row)} />
-                              <Button outline color="secondary" size="sm" onClick={this.unArchive}>Unarchive</Button>
+                              <Button outline color="secondary" size="sm" onClick={() => this.addArchive(row)}>Unarchive</Button>
                             </span>
                           </div>
                         )

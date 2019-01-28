@@ -31,7 +31,7 @@ class Login extends React.Component {
   }
   //depricated function
   // 
- 
+
   // componentWillMount() {
   //   const { history } = this.props;
   //   let token = sessionStorage.getItem('access_token')
@@ -89,8 +89,8 @@ class Login extends React.Component {
   //     loginRedirectReset()
   //   }
   // }
-//componentDidUpdate(prevProps, prevState, snapshot)
-// Todo: login page is not updating properly
+  //componentDidUpdate(prevProps, prevState, snapshot)
+  // Todo: login page is not updating properly
   componentDidUpdate = (nextProps) => {
     const { loginRedirectReset, auth, history } = nextProps
     if (auth.redirect) {
@@ -135,12 +135,12 @@ class Login extends React.Component {
 
   render() {
     //console.log('login render',this.props);
-    const {auth} = this.props;
+    const { auth } = this.props;
     const { username, password, rememberMe } = this.state;
-    
+
     return (
       <div className="login-page">
-      {auth.isLoading && <Loader/>}
+        {auth.isLoading && <Loader />}
         <Container>
           <Row>
             <Col className="ml-auto mr-auto" lg="4" md="6">
