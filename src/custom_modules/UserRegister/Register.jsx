@@ -24,18 +24,18 @@ import logo from 'assets/img/logo/logo.png'
 import { createNotification } from '../../modules/notificationManager';
 import { password_validate } from 'utils/helper'
 import Loader from 'modules/loader';
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 const initialState = {
-  first_name:'',
-  last_name:'',
-  phone:'',
-  email:'',
+  first_name: '',
+  last_name: '',
+  phone: '',
+  email: '',
   username: '',
   password: '',
   confirmPassword: '',
   timezone: undefined,
-  
+
 }
 
 class Register extends React.Component {
@@ -76,57 +76,57 @@ class Register extends React.Component {
   onTextChange = (e, type) => {
 
 
-    if(type == 'timezone'){
+    if (type == 'timezone') {
       this.setState({
-        timezone:e
+        timezone: e
       })
       return;
     }
     const { name, value } = e.target;
-      this.setState({
-        [name]: value,
-      });
-    
+    this.setState({
+      [name]: value,
+    });
+
   }
 
   handleRegister = (e) => {
     e.preventDefault();
-    const { username, password, email, confirmPassword, first_name, last_name,  timezone } = this.state;
+    const { username, password, email, confirmPassword, first_name, last_name, timezone } = this.state;
     console.log(email)
     const { register } = this.props;
-    if(password_validate(password) === false){
+    if (password_validate(password) === false) {
       createNotification('error', 'Passwords must contain minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character', 5000);
     } else if (password != confirmPassword) {
       createNotification('error', 'Passwords do not match', 3000);
     } else {
       let payload = {
-        first_name:first_name,
-        last_name:last_name,
+        first_name: first_name,
+        last_name: last_name,
         email: email,
         username: username,
         password: password,
-        timezone:timezone.value
+        timezone: timezone.value
       }
-      console.log('payload data',payload)
+      console.log('payload data', payload)
       register(payload)
     }
   }
 
-  
+
 
   render() {
-    
+
     const customStyles = {
       control: (base, state) => ({
         ...base,
-        border:'none',
+        border: 'none',
         background: "#e9edf4",
-        marginTop:"20px",
-        height:"50px",
+        marginTop: "20px",
+        height: "50px",
         fontSize: "19px",
-        fontFamiliy:'Myriad Pro-Regular',
+        fontFamiliy: 'Myriad Pro-Regular',
         // match with the menu
-        
+
         // Overwrittes the different states of border
         // borderColor: state.isFocused ? "yellow" : "green",
         // Removes weird border around container
@@ -158,87 +158,87 @@ class Register extends React.Component {
 
 
     console.log('props in register', this.props)
-    const { username, email, password, confirmPassword, first_name, last_name,timezone, phone } = this.state;
+    const { username, email, password, confirmPassword, first_name, last_name, timezone, phone } = this.state;
     const { signup } = this.props;
     return (
       <div className="register-page">
-      {signup.isLoading && <Loader/>}
+        {signup.isLoading && <Loader />}
 
-          <Row>
+        <Row>
           <Col className="" lg="6" sm="12">
-             
-             <Card className="card d-none d-sm-block" id="leftImg" >
-             <img src={img1} className="login-img" id="leftImg" />  
-             </Card>
-       
-         </Col>
-            <Col className="mr-auto ml-auto" lg="4" md="12">
-            <Row>
-               <Col lg="12" md="12" sm="12">
-              <Card className="card-signup text-center">
-                <Form className="form" onSubmit={e => this.handleRegister(e)}>
-                  <CardHeader>
-                  <Row>
-                       <Col lg="12" md="12">
-                      <img src={logo}/>
-                       </Col>
-                     </Row>
-                  </CardHeader>
-                  <CardBody>
-                    <Row>
-                  <div className="col-sm-6 col-md-6">
-                  <CustomFormgroup    required type="text" placeholder="First Name" onChangeHandler={e => this.onTextChange(e)} value={first_name} name="first_name"/>
-                  </div>
 
-                  <div class="col-sm-6 col-md-6">
-                    <CustomFormgroup  required type="text" placeholder="Last Name" onChangeHandler={e => this.onTextChange(e)} value={last_name} name="last_name"/>
-                    </div>
-                    </Row>
-                    <CustomFormgroup   type="text" placeholder="Phone Number" onChangeHandler={e => this.onTextChange(e)} value={phone} name="phone"/>
-                    <FormGroup >
-                          <Select
-                           required
-                          
-                           placeholder="Select your time zone"
-                            value={timezone}
-                            onChange={e => this.onTextChange(e, 'timezone')}
-                            options={timezones.map((item, index) => {
-                            
-                              return {
-                                label: `${item.name} ${item.utc}`,
-                                value: `${item.utc}`
-                              }
-                            })}
-                            name='timezone'
-                            styles={customStyles}
-                          />
-                        </FormGroup>
-                    <CustomFormgroup  required type="email" placeholder="E-mail" onChangeHandler={e => this.onTextChange(e)} value={email} name="email"/>
-                    <CustomFormgroup  required type="text" placeholder="Username" onChangeHandler={e => this.onTextChange(e)} value={username} name="username"/>
-                    <CustomFormgroup  required type="password" placeholder="Password" onChangeHandler={e => this.onTextChange(e)} value={password} name="password" />
-                    <CustomFormgroup  required type="password" placeholder="Confirm Password" onChangeHandler={e => this.onTextChange(e)} value={confirmPassword} name="confirmPassword"  />
-                     
-                  </CardBody>
-                  <CardFooter>
-                  <Button
-                      className="btn mb-3 btn-primary register-button"
-                      type='submit'
-                      block
-                    >
-                      Create My Account
+            <Card className="card d-none d-sm-block" id="leftImg" >
+              <img src={img1} className="login-img" id="leftImg" />
+            </Card>
+
+          </Col>
+          <Col className="mr-auto ml-auto" lg="4" md="12">
+            <Row>
+              <Col lg="12" md="12" sm="12">
+                <Card className="card-signup text-center">
+                  <Form className="form" onSubmit={e => this.handleRegister(e)}>
+                    <CardHeader>
+                      <Row>
+                        <Col lg="12" md="12">
+                          <img src={logo} />
+                        </Col>
+                      </Row>
+                    </CardHeader>
+                    <CardBody>
+                      <Row>
+                        <div className="col-sm-6 col-md-6">
+                          <CustomFormgroup required type="text" placeholder="First Name" onChangeHandler={e => this.onTextChange(e)} value={first_name} name="first_name" />
+                        </div>
+
+                        <div class="col-sm-6 col-md-6">
+                          <CustomFormgroup required type="text" placeholder="Last Name" onChangeHandler={e => this.onTextChange(e)} value={last_name} name="last_name" />
+                        </div>
+                      </Row>
+                      <CustomFormgroup type="text" placeholder="Phone Number" onChangeHandler={e => this.onTextChange(e)} value={phone} name="phone" />
+                      <FormGroup >
+                        <Select
+                          required
+
+                          placeholder="Select your time zone"
+                          value={timezone}
+                          onChange={e => this.onTextChange(e, 'timezone')}
+                          options={timezones.map((item, index) => {
+
+                            return {
+                              label: `${item.name} ${item.utc}`,
+                              value: `${item.utc}`
+                            }
+                          })}
+                          name='timezone'
+                          styles={customStyles}
+                        />
+                      </FormGroup>
+                      <CustomFormgroup required type="email" placeholder="E-mail" onChangeHandler={e => this.onTextChange(e)} value={email} name="email" />
+                      <CustomFormgroup required type="text" placeholder="Username" onChangeHandler={e => this.onTextChange(e)} value={username} name="username" />
+                      <CustomFormgroup required type="password" placeholder="Password" onChangeHandler={e => this.onTextChange(e)} value={password} name="password" />
+                      <CustomFormgroup required type="password" placeholder="Confirm Password" onChangeHandler={e => this.onTextChange(e)} value={confirmPassword} name="confirmPassword" />
+
+                    </CardBody>
+                    <CardFooter>
+                      <Button
+                        className="btn mb-3 btn-primary register-button"
+                        type='submit'
+                        block
+                      >
+                        Create My Account
                   </Button>
-                  <Row>
-                      <Col className='text-center'>
-                        <Link className='link-register'  to='/auth/login'>Back to Sign in?</Link>
-                      </Col>
-                    </Row>
-                  </CardFooter>
-                </Form>
-              </Card>
+                      <Row>
+                        <Col className='text-center'>
+                          <Link className='link-register' to='/auth/login'>Back to Sign in?</Link>
+                        </Col>
+                      </Row>
+                    </CardFooter>
+                  </Form>
+                </Card>
               </Col>
-              </Row>
-            </Col>
-          </Row>
+            </Row>
+          </Col>
+        </Row>
         <div
           className="full-page-background"
           style={{

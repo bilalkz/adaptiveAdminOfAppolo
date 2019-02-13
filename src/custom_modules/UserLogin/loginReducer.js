@@ -15,14 +15,14 @@ export const handleLoginRequest = (state, action) => {
 // check in login component
 export const handleLoginRequestSuccess = (state, action) => {
     // console.log(action, 'login Success');
-    state.isLoading = false;
+    state.isLoading = true;
     const payload = action.payload;
-        
-    if(payload.status == 200){
 
-        localStorage.setItem("access_token", payload.data.token)
-        localStorage.setItem("user_id", payload.data.user_id)
-        localStorage.setItem("user_profile", payload.data.user_profile.id)
+    if (payload.status == 200) {
+
+        // localStorage.setItem("access_token", payload.data.token)
+        // localStorage.setItem("user_id", payload.data.user_id)
+        // localStorage.setItem("user_profile", payload.data.user_profile.id)
 
         // sessionStorage.setItem("access_token", payload.data.token)
         // sessionStorage.setItem("user_id", payload.data.user_id)
@@ -39,13 +39,13 @@ export const handleLoginRequestSuccess = (state, action) => {
 export const handleLoginRequestFailure = (state, action) => {
     // console.log(action, 'login Failed');
     state.isLoading = false;
-    const {payload:{
+    const { payload: {
         response
-    }} = action;
+    } } = action;
     state.redirect = false;
-    if(response == undefined){
+    if (response == undefined) {
         createNotification('error', 'No internet connection found', 2000);
-    }else{
+    } else {
         createNotification('error', response.data.non_field_errors[0], 2000);
     }
     return {

@@ -78,7 +78,6 @@ class Client extends React.Component {
     }
   }
   UNSAFE_componentWillReceiveProps(props) {
-    console.log(props.done)
     if (this.props.done === false && props.done === true) {
       this.setState({
         modalVisible: false
@@ -86,9 +85,7 @@ class Client extends React.Component {
     }
   }
   handleChange = (e) => {
-    console.log(e.target.name);
     this.setState({ [e.target.name]: e.target.value });
-    console.log(this.state);
   }
 
   handleSubmit = (e) => {
@@ -131,7 +128,6 @@ class Client extends React.Component {
     this.setState({
       is_active: !this.state.is_active
     })
-    console.log('add to archived');
     let obj = {
       id: row.original.id,
       is_active: true,
@@ -164,7 +160,6 @@ class Client extends React.Component {
   }
 
   openModal = () => {
-    console.log('this is modal open');
     this.setState({
       modalVisible: true
     })
@@ -177,10 +172,8 @@ class Client extends React.Component {
   }
 
   handleSearch = () => {
-    console.log(this.props.clients)
     const regex = new RegExp(this.state.searchTerm, 'gi');
     const searchResult = this.props.clients.reduce((acc, org) => {
-      console.log("======", acc, org)
       if (org.name && org.name.match(regex)) {
         acc.push(org);
       }
@@ -190,7 +183,6 @@ class Client extends React.Component {
     setTimeout(() => this.setState({ searchLoading: false }), 500)
   }
   render() {
-    // console.log(this.props.clients)
     const { clients } = this.props;
     const { modalVisible, modalHeader, ClientList, archived, searchTerm, searchResult } = this.state;
     return (
@@ -374,7 +366,7 @@ class Client extends React.Component {
                         accessor: "id",
                         Cell: row => (
                           <div className='text-center'>
-                            {console.log(row)}
+
                             <span>
                               <i className='fa fa-edit editProject' onClick={() => this.editModal(row)} />
                               {
@@ -519,7 +511,8 @@ class Client extends React.Component {
 
 const mapStateToProps = (state) => ({
   clients: state.clientReducer.clients,
-  done: state.clientReducer.done
+  done: state.clientReducer.done,
+  errors: state.clientReducer.errors,
 })
 
 const mapDispatchToProps = (dispatch) => ({

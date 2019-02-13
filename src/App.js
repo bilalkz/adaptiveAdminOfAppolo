@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
 //Parent Layouts
 import AuthLayout from "layouts/Auth/Auth.jsx";
@@ -12,8 +12,8 @@ axios.defaults.withCredentials = true;
 
 
 
-class App extends Component{
-    constructor(props){
+class App extends Component {
+    constructor(props) {
         super(props);
         this.state = {
 
@@ -41,12 +41,12 @@ class App extends Component{
         // }, 120000)
     }
 
-    render(){
-        return(
+    render() {
+        return (
             <Switch>
-                <Route path="/auth" render={props => <AuthLayout {...props} />} />
+                {/* <Route path="/auth" render={props => <AuthLayout {...props} />} /> */}
                 <Route path="/admin" render={props => <AdminLayout {...props} />} />
-                <Redirect from="/" to="/auth/login" />
+                <Redirect from="/" to="/admin" />
             </Switch>
         )
     }

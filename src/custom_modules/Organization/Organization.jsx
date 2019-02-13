@@ -29,8 +29,7 @@ import { connect } from 'react-redux';
 import { getOrganizations, create, getOrgTypes, updateOrg, archiveOrg, } from './organizationAction'
 import { reduxInput, reduxTextarea } from '../../components/reduxInput/reduxInput';
 import { reduxDatepicker } from '../../components/reduxDatePicker/reduxDatepicker';
-import { from } from 'rxjs';
-
+import { createNotification } from '../../modules/notificationManager';
 const initialState = {
   orgName: '',
   orgAddress: '',
@@ -42,6 +41,7 @@ const initialState = {
   modalHeader: '',
   activeTab: '1',
   row: [],
+  orgIsActive: false,
   archived: [{
     id: '4',
     organization_name: 'Spacesoft',
@@ -68,6 +68,13 @@ class Organization extends React.Component {
     this.props.getOrgTypes()
   }
 
+  componentWillReceiveProps(props) {
+    if (this.props.errors !== props.errors) {
+      console.log(props.errors)
+      createNotification('error', 'permission denied', 2000);
+    }
+  }
+
   handleSearchChange = (event) => {
     this.setState({
       searchTerm: event.target.value,
@@ -89,7 +96,6 @@ class Organization extends React.Component {
 
   archivedList = () => {
     const archivedList = this.props.organizationsList.reduce((acc, archived) => {
-      console.log(archived);
       if (archived.is_active === true) {
         acc.push(archived);
       }
@@ -99,13 +105,12 @@ class Organization extends React.Component {
   }
 
   handleChange = (e) => {
-    console.log(e.target.name);
     this.setState({ [e.target.name]: e.target.value });
   }
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { orgName, orgAddress, orgType, orgTimeZone, orgPlan } = this.state;
+    let { orgName, orgAddress, orgType, orgTimeZone, orgPlan, orgIsActive } = this.state;
     let obj = {
       name: orgName,
       description: "asdfsdf",
@@ -113,17 +118,28 @@ class Organization extends React.Component {
       timezone: orgTimeZone,
       // logo": base64 image png, jpeg or jpeg, 
       organization_type: orgType,
-      is_active: true
     }
     if (this.state.editMode === false) {
-      this.props.createOrg(obj)
+      const createPayload = {
+        is_active: false,
+        ...obj
+      }
+      this.props.createOrg(createPayload)
     }
     else {
-      const payload = {
+      const obj = {
+        is_active: orgIsActive,
+        name: orgName,
+        address: orgAddress,
+        timezone: orgTimeZone,
+        organization_type: orgType,
+      }
+      const editPayload = {
         id: this.state.id,
         obj
       }
-      this.props.updateOrganization(payload)
+      this.props.updateOrganization(editPayload)
+      this.clearState()
     }
     this.toggleModal();
 
@@ -148,7 +164,6 @@ class Organization extends React.Component {
   addArchive = (row) => {
     let id = row.original.id
     let is_active = row.original.is_active;
-    console.log('add to archived');
     let obj = {
       id,
       is_active: !is_active,
@@ -156,22 +171,33 @@ class Organization extends React.Component {
     if (obj) {
       this.props.archive(obj);
     }
+    this.toggle('1')
   }
+
   editModal = (row) => {
-    console.log(row.original.id)
     this.setState({
       id: row.original.id,
       editMode: true,
       modalVisible: !this.state.modalVisible,
       orgName: row.original.name,
-      orgAddress: row.original.organization_address,
+      orgAddress: row.original.address,
       orgType: row.original.organization_type,
-      orgTimeZone: row.original.organization_timezone,
-      orgPlan: row.original.organization_plan
+      orgTimeZone: row.original.timezone,
+      orgIsActive: row.original.is_active,
+    })
+  }
+
+  clearState = () => {
+    this.setState({
+      orgName: '',
+      orgAddress: '',
+      orgType: '',
+      orgTimeZone: '',
     })
   }
 
   toggleModal = () => {
+    this.clearState()
     this.setState({
       modalVisible: !this.state.modalVisible,
       editMode: false,
@@ -179,7 +205,6 @@ class Organization extends React.Component {
   }
 
   openModal = () => {
-    console.log('this is modal open');
     this.setState({
       modalVisible: true
     })
@@ -393,7 +418,7 @@ class Organization extends React.Component {
                               <i className='fa fa-edit editProject' onClick={() => this.editModal(row)} />
                               {
                                 row.original.is_active
-                                  ? <Button outline color="danger" size="sm" onClick={() => this.addArchive(row)}>UnArchive</Button>
+                                  ? <Button outline color="success" size="sm" onClick={() => this.addArchive(row)}>UnArchive</Button>
                                   : <Button outline color="primary" size="sm" onClick={() => this.addArchive(row)}>Archive</Button>
                               }
                             </span>
@@ -531,10 +556,11 @@ class Organization extends React.Component {
   }
 }
 const mapStateToProps = (state) => {
-  console.log(state.organizations)
   return {
     organizationsList: state.organizations.organizatins,
-    orgTypes: state.organizations.orgTypes
+    orgTypes: state.organizations.orgTypes,
+    errors: state.organizations.errors,
+    archive: state.organizations.archived,
   }
 }
 const mapDispatchToProps = (dispatch) => {

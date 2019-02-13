@@ -11,7 +11,7 @@ const headers = {
   Authorization: `${"Bearer" + " "}${token}`,
   'Content-Type': 'application/json',
 };
-
+console.log(token)
 const id = "4457e6ce-0e21-4342-8779-6e409e44c17c";
 
 

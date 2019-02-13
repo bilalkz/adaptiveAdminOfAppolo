@@ -64,6 +64,9 @@ import Login from "./custom_modules/UserLogin";
 import Register from "./custom_modules/UserRegister";
 import ForgotPassword from "./custom_modules/ForgotPassword";
 import Dashboard from "./custom_modules/Dashboard";
+import Category from './custom_modules/Category';
+import Items from './custom_modules/Items';
+import Media from './custom_modules/Media';
 import ResetPassword from "./custom_modules/ResetPassword";
 import ChangePassword from "./custom_modules/ChangePassword";
 import VerifyUser from "./custom_modules/VerifyUser";
@@ -74,30 +77,30 @@ import UserProfile from "./custom_modules/UserProfile";
 import Projects from "./custom_modules/Projects"
 
 const routes = [
-  {
-          path: "/login",
-          name: "Login",
-          mini: "L",
-          component: Login,
-          layout: "/auth",
-          redirect:true
-        },
-        {
-          path: "/register",
-          name: "Register",
-          mini: "R",
-          component: Register,
-          layout: "/auth",
-          redirect:true
-        },
-        {
-          path: "/forgot-password",
-          name: "Forgot Password",
-          mini: "F",
-          component: ForgotPassword,
-          layout: "/auth",
-          redirect:true
-        },
+  // {
+  //         path: "/login",
+  //         name: "Login",
+  //         mini: "L",
+  //         component: Login,
+  //         layout: "/auth",
+  //         // redirect:true
+  //       },
+  //       {
+  //         path: "/register",
+  //         name: "Register",
+  //         mini: "R",
+  //         component: Register,
+  //         layout: "/auth",
+  //         redirect:true
+  //       },
+  //       {
+  //         path: "/forgot-password",
+  //         name: "Forgot Password",
+  //         mini: "F",
+  //         component: ForgotPassword,
+  //         layout: "/auth",
+  //         redirect:true
+  //       },
   {
     path: "/dashboard",
     name: "Dashboard",
@@ -106,12 +109,33 @@ const routes = [
     layout: "/admin"
   },
   {
+    path: "/items",
+    name: "Items",
+    icon: "nc-icon nc-bank",
+    component: Items,
+    layout: "/admin"
+  },
+  {
+    path: "/category",
+    name: "Category",
+    icon: "nc-icon nc-bank",
+    component: Category,
+    layout: "/admin"
+  },
+  {
+    path: "/media",
+    name: "Media",
+    icon: "nc-icon nc-bank",
+    component: Media,
+    layout: "/admin"
+  },
+  {
     path: "/api/reset_password/:confirmation_key",
     name: "ResetPassword",
     mini: "RP",
     component: ResetPassword,
     layout: "/auth",
-    redirect:true
+    redirect: true
   },
   {
     path: "/api/verify_user/:id",
@@ -119,7 +143,7 @@ const routes = [
     mini: "VU",
     component: VerifyUser,
     layout: "/auth",
-    redirect:true
+    redirect: true
   },
   {
     path: "/api/invitation_signup/:id",
@@ -127,7 +151,7 @@ const routes = [
     mini: "IS",
     component: SignUpConfirmation,
     layout: "/auth",
-    redirect:true
+    redirect: true
   },
   {
     path: "/change-password",
@@ -135,7 +159,7 @@ const routes = [
     mini: "RP",
     component: ChangePassword,
     layout: "/admin",
-    redirect:true
+    redirect: true
   },
   {
     path: "/my-profile",
@@ -143,7 +167,7 @@ const routes = [
     mini: "P",
     component: UserProfile,
     layout: "/admin",
-    redirect:true
+    redirect: true
   },
   {
     path: "/my-account",
@@ -151,7 +175,7 @@ const routes = [
     mini: "AC",
     component: MyAccount,
     layout: "/admin",
-    redirect:true
+    redirect: true
   },
   {
     collapse: true,
@@ -318,34 +342,34 @@ const routes = [
     layout: "/admin"
   },
   {
-          path: "/user-profile",
-          name: "UserProfile",
-          mini: "UP",
-          component: UserProfile,
-          layout: "/admin",
-          redirect:true
+    path: "/user-profile",
+    name: "UserProfile",
+    mini: "UP",
+    component: UserProfile,
+    layout: "/admin",
+    redirect: true
   },
   {
-    path:"/organization",
+    path: "/organization",
     name: "Organization",
     icon: "nc-icon nc-calendar-60",
     component: Organization,
     layout: "/admin"
-   },
-   {
-    path:"/organization",
+  },
+  {
+    path: "/organization",
     name: "organization",
     icon: "nc-icon nc-calendar-60",
     component: Organization,
     layout: "/admin"
-   },
-   {
-     path:"/client",
-     name: "Client",
-     icon: "nc-icon nc-calendar-60",
-     component: Client,
-     layout: "/admin"
-   },
+  },
+  {
+    path: "/client",
+    name: "Client",
+    icon: "nc-icon nc-calendar-60",
+    component: Client,
+    layout: "/admin"
+  },
   // {
   //   collapse: true,
   //   name: "Pages",

@@ -8,7 +8,7 @@ import Footer from "components/Footer/Footer.jsx";
 import Sidebar from "components/Sidebar/Sidebar.jsx";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.jsx";
 
-import routes, { subroute } from "routes.js";
+import routes, { subroute } from "../../routes";
 import { PrivateRoute } from '../../modules/privateRoute';
 
 var ps;

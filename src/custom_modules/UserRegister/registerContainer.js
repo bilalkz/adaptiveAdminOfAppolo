@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 // import Register from '../../views/pages/Register';
 import Register from './Register.jsx';
 // Actions
-import { register, resetRegister } from './registerActions'
+import { register, resetRegister } from './registerActions';
 
 // Store props to map with current state
 const mapStateToProps = state => ({

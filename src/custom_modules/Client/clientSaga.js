@@ -68,6 +68,7 @@ export function* unArchived({ payload }) {
             yield put(a.unArchivedSuccess(response));
         }
     } catch (error) {
+        console.log(error,`errors`);
         yield put(a.unArchivedFail(error));
     }
 }

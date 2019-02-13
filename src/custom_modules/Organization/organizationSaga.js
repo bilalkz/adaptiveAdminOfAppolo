@@ -90,12 +90,13 @@ export function* archive({ payload }) {
         console.log(response)
         if (response) {
             yield index();
-            // yield put(a.archiveOrgSuccess(response))
+            yield put(a.archiveOrgSuccess(response))
             console.log(response)
         }
     }
     catch (err) {
         console.log(err)
+        yield put(a.archiveOrgFail(err));
     }
 }
 

@@ -3,7 +3,7 @@ import axios from 'axios';
 //clients api
 const clientBaseURL = 'http://104.248.151.204:8100/api';
 // create client post 
-export const createClient = (payload) => axios.post(`${clientBaseURL}/client/`, payload);
+export const createClient = '/organization_list/';
 
 //clients list
 export const clientsList = (id) => axios.get(`${clientBaseURL}/clients/${id}`);
@@ -58,6 +58,7 @@ axios.defaults.withCredentials = true;
 // need to convert to string
 
 const URL = `${process.env.REACT_APP_API_URL}/api/`.toString();
+console.log("env`", process.env)
 
 function makeHeaders() {
     const headers = {
@@ -74,10 +75,7 @@ function makeHeaderWithToken() {
     return headers;
 }
 
-const api = axios.create({
-    baseURL: URL,
-    headers: token ? makeHeaderWithToken() : makeHeaders(),
-});
+const api = axios.create({ baseURL: URL, headers: token ? makeHeaderWithToken() : makeHeaders(), });
 
 export default api;
 
