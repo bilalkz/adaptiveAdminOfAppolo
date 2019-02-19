@@ -14,6 +14,7 @@ import profileReducer from './custom_modules/UserProfile/userProfileReducer';
 import projectReducer from './custom_modules/Projects/projectReducer';
 import orgainzationReducer from './custom_modules/Organization/orgReducer';
 import clientReducer from './custom_modules/Client/clientReducer'
+import ModalReducer from './views/components/Modal/modal.reducer';
 import { reducer as formReducer } from 'redux-form'
 
 const authPersistConfig = {
@@ -38,5 +39,6 @@ export default (history) => combineReducers({
     project: projectReducer,
     organizations: orgainzationReducer,
     clientReducer: clientReducer,
+    ModalReducer: ModalReducer,
 
 });

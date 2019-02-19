@@ -37,6 +37,8 @@ import { connect } from 'react-redux';
 class Media extends React.Component {
     state = {
         media: [],
+        fileName: '',
+        mediaFile: ''
     }
 
     render() {
@@ -52,7 +54,7 @@ class Media extends React.Component {
                             Header: () => (
                                 <span className='table-header-style'>
                                     Name
-                                            </span>
+                                </span>
                             ),
                             headerClassName: 'text-center',
                             sortable: false,

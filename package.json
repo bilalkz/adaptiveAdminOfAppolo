@@ -40,6 +40,7 @@
     "chroma": "0.0.1",
     "classnames": "^2.2.6",
     "connected-react-router": "^5.0.1",
+    "formik": "^1.5.1",
     "history": "^4.7.2",
     "install": "^0.12.2",
     "jquery": "3.3.1",
@@ -61,6 +62,7 @@
     "react-filebase64": "^1.0.2",
     "react-google-maps": "^9.4.5",
     "react-icons": "^3.2.2",
+    "react-intl": "^2.8.0",
     "react-jvectormap": "0.0.4",
     "react-loader-spinner": "^2.2.0",
     "react-motion": "^0.5.2",
@@ -83,7 +85,8 @@
     "redux": "^4.0.1",
     "redux-form": "^7.4.2",
     "redux-persist": "^5.10.0",
-    "redux-saga": "^0.16.2"
+    "redux-saga": "^0.16.2",
+    "yup": "^0.26.10"
   },
   "browserslist": [
     ">0.2%",
