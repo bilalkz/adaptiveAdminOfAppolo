@@ -9,25 +9,33 @@ import timesheetApprovalsSagas from './custom_modules/TimesheetApproval/timeshee
 import signupConfirmationSagas from './custom_modules/SignUpConfirmation/signupConfirmationSagas';
 import profileSagas from './custom_modules/UserProfile/userProfileSagas';
 import projectSagas from './custom_modules/Projects/projectSagas';
-import OrganizationSagas from './custom_modules/Organization/organizationSaga'
-import ClientSaga from './custom_modules/Client/clientSaga';
+import mediaSaga from './custom_modules/Media/mediaSaga';
+import categoriesSaga from './custom_modules/Category/categorySaga';
+import applicationSaga from './custom_modules/Application/appSaga';
+import itemsSaga from './custom_modules/Items/itemsSaga';
+
+
 
 /**
  * rootSaga
  */
 export default function* root() {
     yield all([
-        fork(loginSagas),
-        fork(registerSagas),
-        fork(forgotPasswordSagas),
-        fork(dashboardSagas),
-        fork(resetPasswordSagas),
+        // fork(loginSagas),
+        // fork(registerSagas),
+        // fork(forgotPasswordSagas),
+        // fork(dashboardSagas),
+        // fork(resetPasswordSagas),
         fork(verifySagas),
         fork(timesheetApprovalsSagas),
         fork(signupConfirmationSagas),
         fork(profileSagas),
         fork(projectSagas),
-        fork(OrganizationSagas),
-        fork(ClientSaga)
+        // fork(OrganizationSagas),
+        // fork(ClientSaga),
+        fork(mediaSaga),
+        fork(categoriesSaga),
+        fork(applicationSaga),
+        fork(itemsSaga),
     ]);
 }

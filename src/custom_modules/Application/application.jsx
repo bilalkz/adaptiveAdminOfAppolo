@@ -32,15 +32,15 @@ import {
 
 import ReactTable from "react-table";
 import { connect } from 'react-redux';
-import { getList, update, create, deleteCategory } from './categoryAction';
+import { getList, update, create, deleteAPPLICATION } from './appAction';
 import Loader from '../../modules/loader';
 
 
 
-class Category extends React.Component {
+class Application extends React.Component {
     state = {
         id: null,
-        categories: [],
+        applications: [],
         name: '',
         modalVisible: false,
         deleteModalVisible: false,
@@ -56,10 +56,10 @@ class Category extends React.Component {
         console.log(this.props)
         console.log(prevProps);
         if (prevProps !== this.props) {
-            if (this.props.categories) {
-                console.log(this.props.categories)
+            if (this.props.application) {
+                console.log(this.props.application)
                 this.setState({
-                    categories: this.props.categories,
+                    applications: this.props.application,
                     loading: this.props.loading,
                     modalVisible: false,
                     deleteModalVisible: false,
@@ -83,13 +83,13 @@ class Category extends React.Component {
         console.log(data);
 
         if (this.state.editMode === false && this.state.deleteMode === false) {
-            data.append('category_name', name);
+            data.append('name', name);
             this.props.create(data)
         }
         else {
             if (this.state.editMode === true && this.state.deleteMode === false) {
                 data.append('id', id)
-                data.append('category_name', name);
+                data.append('name', name);
                 this.props.update(data)
             }
         }
@@ -130,7 +130,7 @@ class Category extends React.Component {
             id: row.original.id,
             editMode: true,
             modalVisible: !this.state.modalVisible,
-            name: row.original.category_name,
+            name: row.original.name,
         })
     }
 
@@ -157,9 +157,9 @@ class Category extends React.Component {
 
     handleSearch = () => {
         const regex = new RegExp(this.state.searchTerm, 'gi');
-        const searchResult = this.state.categories.reduce((acc, category) => {
-            if (category.category_name && category.category_name.match(regex)) {
-                acc.push(category);
+        const searchResult = this.state.applications.reduce((acc, app) => {
+            if (app.name && app.name.match(regex)) {
+                acc.push(app);
             }
             return acc;
         }, [])
@@ -169,8 +169,8 @@ class Category extends React.Component {
 
     render() {
         // const { media } = this.props;
-        const { deleteModalVisible, categories, modalVisible, searchTerm, searchResult } = this.state;
-        console.log(categories);
+        const { deleteModalVisible, applications, modalVisible, searchTerm, searchResult } = this.state;
+        console.log(applications);
         console.log(modalVisible)
         console.log(deleteModalVisible)
 
@@ -178,13 +178,13 @@ class Category extends React.Component {
             <div className="content">
                 {this.state.loading ? <Loader /> : ''}
                 <Modal backdrop={true} isOpen={modalVisible} toggle={this.toggleModal} style={{ width: '100%' }} className='add-project-modal'>
-                    <ModalHeader toggle={this.toggleModal}>Add category</ModalHeader>
+                    <ModalHeader toggle={this.toggleModal}>Add Application</ModalHeader>
                     <ModalBody>
                         <Form onSubmit={this.handleSubmit}>
                             <FormGroup row>
                                 <Label for="name" sm={4}>Name</Label>
                                 <Col sm={8}>
-                                    <Input type="text" value={this.state.name} onChange={this.handleChange} style={{ marginTop: '0px' }} name="name" id="fileName" placeholder="Category Name" />
+                                    <Input type="text" value={this.state.name} onChange={this.handleChange} style={{ marginTop: '0px' }} name="name" placeholder="Application Name" />
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -208,11 +208,11 @@ class Category extends React.Component {
                 </Modal>
 
                 <Modal backdrop={true} isOpen={deleteModalVisible} toggle={this.toggleDeleteModal} style={{ width: '100%' }} className='add-project-modal'>
-                    <ModalHeader toggle={this.toggleDeleteModal}>delete Category</ModalHeader>
+                    <ModalHeader toggle={this.toggleDeleteModal}>delete Application</ModalHeader>
                     <ModalBody>
                         <Form onSubmit={this.handleSubmit}>
                             <FormGroup row>
-                                <Label for="address" sm={10}>Are you sure you want to delete this Category <span style={{ color: 'red' }}>{this.state.fileName}</span> ?</Label>
+                                <Label for="address" sm={10}>Are you sure you want to delete this Application <span style={{ color: 'red' }}>{this.state.name}</span> ?</Label>
                             </FormGroup>
                             <FormGroup row>
                                 {this.props.errors
@@ -238,14 +238,14 @@ class Category extends React.Component {
                 <Container>
                     <Row className="tabs-container">
 
-                        <Label><b>Categories List</b></Label>
+                        <Label><b>Applications List</b></Label>
                         <Input onChange={(e) => this.handleSearchChange(e)} type="text" name="searchTerm" style={{ marginLeft: '10px', height: '36px', width: '30%', marginTop: '0px' }} placeholder="search" />
                         <Button className="btn-add" style={{ marginTop: '0px', borderRadius: '0' }} onClick={this.openModal}>Add Category</Button>
                     </Row>
                 </Container>
                 <ReactTable
                     pageSizeOptions={[10, 20, 50]}
-                    data={searchTerm ? searchResult && searchResult : categories && categories}
+                    data={searchTerm ? searchResult && searchResult : applications && applications}
                     columns={[
                         {
                             Header: () => (
@@ -255,7 +255,7 @@ class Category extends React.Component {
                             ),
                             headerClassName: 'text-center',
                             sortable: false,
-                            accessor: "category_name",
+                            accessor: "name",
                             Cell: row => (
                                 <div className='text-center'>
                                     <span className='text-center'>
@@ -312,17 +312,17 @@ class Category extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-    categories: state.categories.categories,
-    done: state.categories.done,
-    errors: state.categories.errors,
-    loading: state.categories.loading,
+    application: state.application.applications,
+    done: state.application.done,
+    errors: state.application.errors,
+    loading: state.application.loading,
 })
 
 const mapDispatchToProps = (dispatch) => ({
     getList: () => { dispatch(getList()) },
     update: (payload) => { dispatch(update(payload)) },
     create: (payload) => { dispatch(create(payload)) },
-    delete: (payload) => { dispatch(deleteCategory(payload)) }
+    delete: (payload) => { dispatch(deleteAPPLICATION(payload)) }
     // search: () => { dispatch() }
 })
-export default connect(mapStateToProps, mapDispatchToProps)(Category);
+export default connect(mapStateToProps, mapDispatchToProps)(Application);

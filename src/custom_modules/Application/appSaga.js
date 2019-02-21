@@ -1,29 +1,29 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
-import { items, createItem, updateItem, remove } from './itemsApi';
+import { applications, createApp, updateApp, remove } from './appApi';
 
-import * as a from './itemsAction';
+import * as a from './appAction';
 //Constants
 import {
-    GET_ITEMS_LIST,
-    GET_ITEMS_LIST_SUCCESS,
-    GET_ITEMS_LIST_FAIL,
-    CREATE_ITEM,
-    CREATE_ITEM_SUCCESS,
-    CREATE_ITEM_FAIL,
-    UPDATE_ITEM,
-    UPDATE_ITEM_SUCCESS,
-    UPDATE_ITEM_FAIL,
-    DELETE_ITEM,
-    DELETE_ITEM_SUCCESS,
-    DELETE_ITEM_FAIL,
+    GET_APPLICATION_LIST,
+    GET_APPLICATION_LIST_SUCCESS,
+    GET_APPLICATION_LIST_FAIL,
+    CREATE_APPLICATION,
+    CREATE_APPLICATION_SUCCESS,
+    CREATE_APPLICATION_FAIL,
+    UPDATE_APPLICATION,
+    UPDATE_APPLICATION_SUCCESS,
+    UPDATE_APPLICATION_FAIL,
+    DELETE_APPLICATION,
+    DELETE_APPLICATION_SUCCESS,
+    DELETE_APPLICATION_FAIL,
 }
     from '../../modules/constants';
 
 //Handle login request
 export function* index() {
     try {
-        const response = yield call(items);
+        const response = yield call(applications);
 
         if (response) {
             console.log(response, `this is from client saga`);
@@ -40,8 +40,7 @@ export function* index() {
 //create sagas
 export function* create({ payload }) {
     try {
-        console.log(payload);
-        const response = yield call(createItem, payload);
+        const response = yield call(createApp, payload);
         if (response) {
             console.log(response)
             yield call(delay, 2000)
@@ -57,7 +56,7 @@ export function* create({ payload }) {
 //update sagas
 export function* update({ payload }) {
     try {
-        const response = yield call(updateItem, payload);
+        const response = yield call(updateApp, payload);
         if (response) {
             yield call(delay, 2000)
             yield put(a.updateSuccess())
@@ -70,7 +69,7 @@ export function* update({ payload }) {
 }
 
 //Delete Saga
-export function* deleteItem({ payload }) {
+export function* deleteCategory({ payload }) {
     try {
         const response = yield call(remove, payload)
         if (response) {
@@ -88,9 +87,9 @@ export function* deleteItem({ payload }) {
 
 export default function* root() {
     yield all([
-        takeLatest(GET_ITEMS_LIST, index),
-        takeLatest(CREATE_ITEM, create),
-        takeLatest(UPDATE_ITEM, update),
-        takeLatest(DELETE_ITEM, deleteItem)
+        takeLatest(GET_APPLICATION_LIST, index),
+        takeLatest(CREATE_APPLICATION, create),
+        takeLatest(UPDATE_APPLICATION, update),
+        takeLatest(DELETE_APPLICATION, deleteCategory)
     ]);
 }

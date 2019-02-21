@@ -21,142 +21,330 @@ import {
   FormGroup,
   Input,
   Table,
-  Modal,
-  ModalBody,
-  ModalFooter,
   Row,
   Col,
+  Modal,
   ModalHeader,
+  ModalFooter,
+  ModalBody,
   UncontrolledTooltip
 } from "reactstrap";
 
 import ReactTable from "react-table";
 import { connect } from 'react-redux';
-import { getItems, update, create, } from './itemsAction';
-// import { Modal, ModalBody, ModalFooter } from '../../views/components';
-// import { openModal, closeModal } from '../../views/components/Modal/modal.action'
-import * as Yup from 'yup';
-import { Formik } from 'formik';
+import { getList, update, create, deleteItem } from './itemsAction';
+import { getList as applicationList } from '../Application/appAction';
+import { getList as mediaList } from '../Media/mediaAction';
+import { getList as categoryList } from '../Category/categoryAction';
+
+import Loader from '../../modules/loader';
 
 
-const validation = {
-  email: Yup
-    .string('This is not a valid string')
-    .email('Email is not valid')
-    .min(3, 'Email should be at least of 3 characters')
-    .required('Email is required')
-    .trim(),
-}
 
 class Items extends React.Component {
   state = {
+    id: null,
     items: [],
+    applications: [],
+    media: [],
+    categories: [],
+    application_id: null,
+    media_id: null,
+    media_type: '',
+    category_id: null,
+    content: '',
+    contentSource: '',
+    categoryName: '',
+    backgroundImage: '',
     modalVisible: false,
+    deleteModalVisible: false,
     editMode: false,
+    deleteMode: false,
+    searchResult: [],
+    searchTerm: '',
+    searchLoading: false,
+    loading: false,
   }
+
+  componentDidUpdate(prevProps) {
+    console.log(this.props)
+    console.log(prevProps);
+    if (prevProps !== this.props) {
+      if (this.props.items) {
+        console.log(this.props.items)
+        this.setState({
+          items: this.props.items,
+          applications: this.props.applicationsListRedux,
+          media: this.props.mediaListRedux,
+          categories: this.props.categoryListRedux,
+          loading: this.props.loading,
+          modalVisible: false,
+          deleteModalVisible: false,
+        })
+      }
+    }
+  }
+
 
   handleChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
+
+    if (e.target.name === 'media_id') {
+      this.checkType(e.target.value);
+    }
+    // else if (e.target.name === "category_id") {
+    //   const { category_id } = this.state
+    //   this.state.category_id = this.state.category_id.concat(e.target.value)
+    //   this.setState({
+    //     category_id: category_id
+    //   })
+    // }
+
   }
+
+  checkType = (id) => {
+    console.log(this.state.media);
+    const myId = parseInt(id);
+    const searchResult = this.state.media.reduce((acc, media) => {
+      if (media.id && media.id === myId) {
+        acc.push(media);
+      }
+      return acc;
+    }, [])
+    console.log(searchResult[0].type);
+    this.setState({ media_type: searchResult[0].type })
+  }
+
 
   handleSubmit = (e) => {
     e.preventDefault()
-    const { clientName, clientAddress, clientEmail, clientOrganization, clientContact, is_active } = this.state;
-    let obj = {
-      name: clientName,
-      client_organization: clientOrganization,
-      address: clientAddress,
-      description: '',
-      email: clientEmail,
-      // contact: clientContact,
-      organization: `4457e6ce-0e21-4342-8779-6e409e44c17c`,
-      is_active,
-    }
-    if (this.state.editMode === false) {
+
+    const { id, content, media_type, contentSource, application_id, media_id, category_id } = this.state;
+    const data = new FormData()
+
+    // console.log(data);
+
+    if (this.state.editMode === false && this.state.deleteMode === false) {
+      // var arr = [];
+      // arr.push(application_id)
+
+      // if (media_type === 'mp3') {
+      //   data.append('audio_id', media_id)
+      // } else {
+      //   data.append('background_image_id', media_id);
+      // }
+      // data.append('content', content);
+      // data.append('content_source', contentSource);
+      // for (var i = 0; i < arr.length; i++) {
+      //   data.append('category_ids[]', arr[i]);
+      // }
+      // data.append('application_id', application_id)
+      // // data.append('category_ids', arr)
+
+      // const check = () => {
+      //   if (media_type === 'mp3') {
+      //     return {
+      //       audio_id: media_id
+      //     }
+
+      //   }
+      //   return { background_image_id: media_id }
+      // }
+
+      const key = media_type === 'mp3' ? 'audio_id' : 'background_image_id';
+      let obj = {
+        content: content,
+        content_source: contentSource,
+        application_id: application_id,
+        category_ids: [category_id],
+        [key]: media_id
+      }
       this.props.create(obj)
     }
     else {
-      const payload = {
-        id: this.state.id,
-        obj
+      if (this.state.editMode === true && this.state.deleteMode === false) {
+        // data.append('id', id)
+        // if (media_type === 'mp3') {
+        //   data.append('audio_id', media_id)
+        // } else {
+        //   data.append('background_image_id', media_id);
+        // }
+        // data.append('content', content);
+        // data.append('content_source', contentSource);
+        // data.append('application_id', application_id)
+        // data.append('category_ids[]', category_id)
+
+        const key = media_type === 'mp3' ? 'audio_id' : 'background_image_id';
+        let obj = {
+          id,
+          content: content,
+          content_source: contentSource,
+          application_id: application_id,
+          category_ids: [category_id],
+          [key]: media_id
+        }
+        this.props.update(obj)
       }
-      this.props.update(payload)
+    }
+
+    if (this.state.deleteMode === true) {
+      data.append('id', this.state.id)
+      this.props.delete(data)
     }
   }
+
   componentDidMount() {
-    this.props.getItems();
+    this.props.getList();
+    this.props.applicationList();
+    this.props.mediaList();
+    this.props.categoryList();
+  }
+
+  openDeleteModal = () => {
+    this.setState({
+      deleteModalVisible: true
+    })
+  }
+
+  toggleDeleteModal = () => {
+    this.setState({
+      deleteModalVisible: !this.state.deleteModalVisible,
+      deleteMode: false,
+    })
+  }
+
+  deleteModal = (row) => {
+    this.setState({
+      id: row.original.id,
+      deleteMode: true,
+      deleteModalVisible: !this.state.deleteModalVisible,
+    })
+  }
+
+  editModal = (row) => {
+    const key = row.original.media_type === 'mp3' ? row.original.audio_id : row.original.background_image_id;
+    this.setState({
+      id: row.original.id,
+      editMode: true,
+      modalVisible: !this.state.modalVisible,
+      content: row.original.content,
+      contentSource: row.original.content_source,
+      application_id:row.original.application_id,
+      media_id:row.original.
+    })
   }
 
   toggleModal = () => {
     this.setState({
       modalVisible: !this.state.modalVisible,
       editMode: false,
-    })
-  }
-
-  editModal = (row) => {
-    this.setState({
-      id: row.original.id,
-      editMode: true,
-      modalVisible: !this.state.modalVisible,
-      clientName: row.original.name,
-      clientAddress: row.original.address,
-      clientEmail: row.original.email,
-      clientOrganization: row.original.client_organization,
-      clientContact: row.original.contact
+      deleteMode: false,
+      name: '',
     })
   }
 
   openModal = () => {
-    this.setState({ modalVisible: true })
+    this.setState({
+      modalVisible: true
+    })
+  }
+  handleSearchChange = (event) => {
+    this.setState({
+      searchTerm: event.target.value,
+      searchLoading: true,
+    }, () => this.handleSearch())
   }
 
-  closeModal = () => {
-    this.setState({ modalVisible: false });
+  handleSearch = () => {
+    const regex = new RegExp(this.state.searchTerm, 'gi');
+    const searchResult = this.state.applications.reduce((acc, app) => {
+      if (app.name && app.name.match(regex)) {
+        acc.push(app);
+      }
+      return acc;
+    }, [])
+    this.setState({ searchResult })
+    setTimeout(() => this.setState({ searchLoading: false }), 500)
   }
 
   render() {
-    const { items, modalVisible } = this.state;
+    console.log(this.state.application_id)
+    // const { media } = this.props;
+    const { deleteModalVisible, items, modalVisible, searchTerm, searchResult } = this.state;
+    console.log(items);
+    console.log(modalVisible)
+    console.log(deleteModalVisible)
+
     return (
       <div className="content">
-
+        {this.state.loading ? <Loader /> : ''}
         <Modal backdrop={true} isOpen={modalVisible} toggle={this.toggleModal} style={{ width: '100%' }} className='add-project-modal'>
-          <ModalHeader toggle={this.toggleModal}>Add Client</ModalHeader>
+          <ModalHeader toggle={this.toggleModal}>Add Application</ModalHeader>
           <ModalBody>
             <Form onSubmit={this.handleSubmit}>
               <FormGroup row>
-                <Label for="name" sm={4}>Client Name</Label>
+                <Label for="name" sm={4}>Content</Label>
                 <Col sm={8}>
-                  <Input type="text" value={this.state.clientName} onChange={this.handleChange} style={{ marginTop: '0px' }} name="clientName" id="organizationname" placeholder="Organization Name" />
+                  <Input type="text" value={this.state.content} onChange={this.handleChange} style={{ marginTop: '0px' }} name="content" placeholder="Content" />
                 </Col>
               </FormGroup>
               <FormGroup row>
-                <Label for="address" sm={4}>Client Address</Label>
+                <Label for="name" sm={4}>Source</Label>
                 <Col sm={8}>
-                  <Input value={this.state.clientAddress} type="text" onChange={this.handleChange} style={{ marginTop: '0px' }} name="clientAddress" id="address" placeholder="Address" />
+                  <Input type="text" value={this.state.contentSource} onChange={this.handleChange} style={{ marginTop: '0px' }} name="contentSource" placeholder="Source" />
                 </Col>
               </FormGroup>
               <FormGroup row>
-                <Label for="organizationType" sm={4}>Email</Label>
+                <Label for="applicationType" sm={4}>Application Type</Label>
                 <Col sm={8}>
-                  <Input value={this.state.clientEmail} onChange={this.handleChange} style={{ marginTop: '0px' }} name="clientEmail" id="organizationType" />
-                </Col>
-              </FormGroup>
-              <FormGroup row>
-                <Label for="timezone" sm={4}>Organization</Label>
-                <Col sm={8}>
-                  <Input value={this.state.clientOrganization} onChange={this.handleChange} style={{ marginTop: '0px' }} name="clientOrganization" id="timezone" />
-                </Col>
-              </FormGroup>
-              <FormGroup row>
-                <Label for="plan" sm={4}>Contact</Label>
-                <Col sm={8}>
-                  <Input onChange={this.handleChange} value={this.state.clientContact} style={{ marginTop: '0px' }} name="clientContact" id="type">
-                    <option>Monitored</option>
-                    <option>Unmonitored</option>
-                    <option>Unmonitored Field Service</option>
+                  <Input value={this.state.application_id} type="select" onChange={this.handleChange} style={{ marginTop: '0px' }} name="application_id" id="applicationType">
+                    <option>Select</option>
+                    {
+                      this.state.applications && this.state.applications.map((app, i) => (
+                        <option key={i} value={app.id}>{app.name}</option>
+                      ))
+                    }
+
                   </Input>
                 </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Label for="applicationType" sm={4}>Media Type</Label>
+                <Col sm={8}>
+                  <Input value={this.state.media_id} type="select" onChange={this.handleChange} style={{ marginTop: '0px' }} name="media_id" id="mediaType">
+                    <option>Select</option>
+                    {
+                      this.state.media && this.state.media.map((media, i) => (
+                        <option key={i} value={media.id}>{media.name}</option>
+                      ))
+                    }
+
+                  </Input>
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                <Label for="applicationType" sm={4}>Category Type</Label>
+                <Col sm={8}>
+                  <Input value={this.state.category_id} type="select" onChange={this.handleChange} style={{ marginTop: '0px' }} name="category_id" id="categoryType">
+                    <option>Select</option>
+                    {
+                      this.state.categories && this.state.categories.map((category, i) => (
+                        <option key={i} value={category.id}>{category.category_name}</option>
+                      ))
+                    }
+
+                  </Input>
+                </Col>
+              </FormGroup>
+              <FormGroup row>
+                {this.props.errors
+                  ?
+                  <Fragment> <Label for="errors" sm={4}>Errors</Label>
+                    <Col sm={8}>
+                      <Label className="text-danger">{this.props.errors}</Label>
+                    </Col>
+                  </Fragment>
+                  : ''}
               </FormGroup>
               <FormGroup submit>
                 <Col sm={{ size: 10, offset: 2 }}>
@@ -168,28 +356,55 @@ class Items extends React.Component {
 
         </Modal>
 
+        <Modal backdrop={true} isOpen={deleteModalVisible} toggle={this.toggleDeleteModal} style={{ width: '100%' }} className='add-project-modal'>
+          <ModalHeader toggle={this.toggleDeleteModal}>delete Application</ModalHeader>
+          <ModalBody>
+            <Form onSubmit={this.handleSubmit}>
+              <FormGroup row>
+                <Label for="address" sm={10}>Are you sure you want to delete this Application <span style={{ color: 'red' }}>{this.state.name}</span> ?</Label>
+              </FormGroup>
+              <FormGroup row>
+                {this.props.errors
+                  ?
+                  <Fragment> <Label for="address" sm={4}>Errors</Label>
+                    <Col sm={8}>
+                      <Label color="danger">{this.props.errors}</Label>
+                    </Col>
+                  </Fragment>
+                  : ''}
+              </FormGroup>
+              <FormGroup submit>
+                <Col sm={{ size: 10, offset: 2 }}>
+                  <Button>Submit</Button>
+                  <Button onClick={this.toggleDeleteModal}>Cancel</Button>
+                </Col>
+              </FormGroup>
+
+            </Form>
+          </ModalBody>
+
+        </Modal>
         <Container>
           <Row className="tabs-container">
 
-
-            <Input style={{ marginLeft: '10px', height: '36px', width: '30%', marginTop: '0px' }} placeholder="search" />
-            <Button className="btn-add" style={{ marginTop: '0px', borderRadius: '0' }} onClick={this.openModal}>Add Items</Button>
+            <Label><b>Applications List</b></Label>
+            <Input onChange={(e) => this.handleSearchChange(e)} type="text" name="searchTerm" style={{ marginLeft: '10px', height: '36px', width: '30%', marginTop: '0px' }} placeholder="search" />
+            <Button className="btn-add" style={{ marginTop: '0px', borderRadius: '0' }} onClick={this.openModal}>Add Category</Button>
           </Row>
         </Container>
-
         <ReactTable
           pageSizeOptions={[10, 20, 50]}
-          data={items && items}
+          data={searchTerm ? searchResult && searchResult : items && items}
           columns={[
             {
               Header: () => (
                 <span className='table-header-style'>
-                  Name
-                                        </span>
+                  Content
+                </span>
               ),
               headerClassName: 'text-center',
               sortable: false,
-              accessor: "name",
+              accessor: "content",
               Cell: row => (
                 <div className='text-center'>
                   <span className='text-center'>
@@ -201,12 +416,12 @@ class Items extends React.Component {
             {
               Header: () => (
                 <span className='table-header-style'>
-                  Address
-                                        </span>
+                  Source
+                </span>
               ),
               headerClassName: 'text-center',
               sortable: false,
-              accessor: "address",
+              accessor: "content_source",
               Cell: row => (
                 <div className='text-center'>
                   <span className='text-center'>
@@ -218,12 +433,31 @@ class Items extends React.Component {
             {
               Header: () => (
                 <span className='table-header-style'>
-                  Email
-                                        </span>
+                  Categories
+                </span>
               ),
               headerClassName: 'text-center',
               sortable: false,
-              accessor: "email",
+              accessor: "categories[0].category_name",
+              Cell: row =>
+                (
+                  <div className='text-center'>
+                    <span className='text-center'>
+                      {row.value}{console.log(row.value)}
+                    </span>
+                  </div>
+                )
+
+            },
+            {
+              Header: () => (
+                <span className='table-header-style'>
+                  Application
+                </span>
+              ),
+              headerClassName: 'text-center',
+              sortable: false,
+              accessor: "application_id",
               Cell: row => (
                 <div className='text-center'>
                   <span className='text-center'>
@@ -235,29 +469,12 @@ class Items extends React.Component {
             {
               Header: () => (
                 <span className='table-header-style'>
-                  Organization
-                                        </span>
+                  Media
+                </span>
               ),
               headerClassName: 'text-center',
               sortable: false,
-              accessor: "client_organization",
-              Cell: row => (
-                <div className='text-center'>
-                  <span className='text-center'>
-                    {row.value}
-                  </span>
-                </div>
-              )
-            },
-            {
-              Header: () => (
-                <span className='table-header-style'>
-                  Contact
-                                        </span>
-              ),
-              headerClassName: 'text-center',
-              sortable: false,
-              accessor: "client_contact",
+              accessor: "background_image[0].path",
               Cell: row => (
                 <div className='text-center'>
                   <span className='text-center'>
@@ -270,7 +487,7 @@ class Items extends React.Component {
               Header: () => (
                 <span className='table-header-style'>
                   Actions
-                                        </span>
+                                            </span>
               ),
               headerClassName: 'text-center',
               sortable: false,
@@ -280,11 +497,9 @@ class Items extends React.Component {
 
                   <span>
                     <i className='fa fa-edit editProject' onClick={() => this.editModal(row)} />
-                    {
-                      row.original.is_active
-                        ? <Button disabled outline color="primary" size="sm" onClick={() => this.addArchive(row)}>Archived</Button>
-                        : <Button outline color="primary" size="sm" onClick={() => this.addArchive(row)}>Archive</Button>
-                    }
+                  </span>
+                  <span>
+                    <i style={{ color: 'red' }} className='fa fa-remove editProject' onClick={() => this.deleteModal(row)} />
                   </span>
                 </div>
               )
@@ -298,16 +513,26 @@ class Items extends React.Component {
   }
 }
 
-// const mapStateToProps = ({ forgotPassword }) => ({
-//   forgotPasswordResponse: forgotPassword.forgotPasswordResponse,
-//   isLoading: forgotPassword.isLoading,
-//   errors: forgotPassword.errors,
-// })
+const mapStateToProps = (state) => ({
+  items: state.items.items,
+  done: state.application.done,
+  errors: state.application.errors,
+  loading: state.application.loading,
+  applicationsListRedux: state.application.applications,
+  mediaListRedux: state.media.media,
+  categoryListRedux: state.categories.categories,
 
-const mapDispatchToProps = (dispatch) => ({
-  getItems: () => dispatch(getItems()),
-  create: (payload) => dispatch(create(payload)),
-  update: (payload) => dispatch(update(payload))
 })
 
-export default connect(null, mapDispatchToProps)(Items)
+const mapDispatchToProps = (dispatch) => ({
+  getList: () => { dispatch(getList()) },
+  applicationList: () => { dispatch(applicationList()) },
+  mediaList: () => { dispatch(mediaList()) },
+  categoryList: () => { dispatch(categoryList()) },
+  update: (payload) => { dispatch(update(payload)) },
+  create: (payload) => { dispatch(create(payload)) },
+  delete: (payload) => { dispatch(deleteItem(payload)) }
+  // search: () => { dispatch() }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Items);

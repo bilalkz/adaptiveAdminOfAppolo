@@ -5,11 +5,11 @@ import api from '../../utils/api'
 // const token = localStorage.getItem('access_token');
 
 
-const BaseURL = `http://138.68.241.158/api/category`;
+const BaseURL = `http://138.68.241.158/api/application`;
 
 
 
-export function categories() {
+export function applications() {
   return axios.get(`${BaseURL}/list_all`, {
     withCredentials: false,
     mode: "no-cors",
@@ -20,7 +20,7 @@ export function categories() {
   })
 }
 
-export function createCategory(payload) {
+export function createApp(payload) {
   return axios.post(`${BaseURL}/create`, payload, {
     withCredentials: false,
     mode: "no-cors",
@@ -31,7 +31,7 @@ export function createCategory(payload) {
   })
 }
 
-export function updateCategory(payload) {
+export function updateApp(payload) {
   return axios.post(`${BaseURL}/update`, payload, {
     withCredentials: false,
     mode: "no-cors",

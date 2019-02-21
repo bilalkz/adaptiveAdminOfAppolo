@@ -1,90 +1,92 @@
 import {
-    GET_ITEMS_LIST,
-    GET_ITEMS_LIST_SUCCESS,
-    GET_ITEMS_LIST_FAIL,
-    CREATE_ITEM,
-    CREATE_ITEM_SUCCESS,
-    CREATE_ITEM_FAIL,
-    UPDATE_ITEM,
-    UPDATE_ITEM_SUCCESS,
-    UPDATE_ITEM_FAIL,
-    DELETE_ITEM,
-    DELETE_ITEM_SUCCESS,
-    DELETE_ITEM_FAIL,
+    GET_MEDIA_LIST,
+    GET_MEDIA_LIST_SUCCESS,
+    GET_MEDIA_LIST_FAIL,
+    CREATE_MEDIA,
+    CREATE_MEDIA_SUCCESS,
+    CREATE_MEDIA_FAIL,
+    UPDATE_MEDIA,
+    UPDATE_MEDIA_SUCCESS,
+    UPDATE_MEDIA_FAIL,
+    DELETE_MEDIA,
+    DELETE_MEDIA_SUCCESS,
+    DELETE_MEDIA_FAIL,
 } from '../../modules/constants';
 
 const initialState = {
     loading: false,
     errors: '',
-    items: [],
+    media: [],
     done: false
 }
 
-const itemsReducer = (state = initialState, action) => {
+const mediaReducer = (state = initialState, action) => {
     switch (action.type) {
-        case GET_ITEMS_LIST:
+        case GET_MEDIA_LIST:
             return {
                 ...state,
                 loading: true,
+                done: false
             }
-        case GET_ITEMS_LIST_SUCCESS:
+        case GET_MEDIA_LIST_SUCCESS:
             return {
                 ...state,
                 loading: false,
-                items: action.payload,
+                media: action.payload,
             }
-        case GET_ITEMS_LIST_FAIL:
+        case GET_MEDIA_LIST_FAIL:
             return {
                 ...state,
                 loading: false,
                 errors: action.payload,
             }
-        case UPDATE_ITEM:
+        case UPDATE_MEDIA:
             return {
                 ...state,
                 loading: true,
             }
-        case UPDATE_ITEM_SUCCESS:
+        case UPDATE_MEDIA_SUCCESS:
             return {
                 ...state,
                 loading: false,
                 done: true
             }
-        case UPDATE_ITEM_FAIL:
+        case UPDATE_MEDIA_FAIL:
             return {
                 ...state,
                 loading: false,
                 errors: action.payload,
             }
-        case CREATE_ITEM:
+        case CREATE_MEDIA:
             return {
                 ...state,
                 loading: true,
             }
-        case CREATE_ITEM_SUCCESS:
-            return {
-                ...state,
-                loading: false,
-                done: true
-            }
-        case CREATE_ITEM_FAIL:
-            return {
-                ...state,
-                loading: false,
-                errors: action.payload,
-            }
-        case DELETE_ITEM:
-            return {
-                ...state,
-                loading: true,
-            }
-        case DELETE_ITEM_SUCCESS:
+        case CREATE_MEDIA_SUCCESS:
             return {
                 ...state,
                 loading: false,
                 done: true,
             }
-        case DELETE_ITEM_FAIL:
+        case CREATE_MEDIA_FAIL:
+            return {
+                ...state,
+                loading: false,
+                errors: action.payload,
+            }
+        case DELETE_MEDIA:
+            return {
+                ...state,
+                loading: true,
+
+            }
+        case DELETE_MEDIA_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                done: true,
+            }
+        case DELETE_MEDIA_FAIL:
             return {
                 ...state,
                 loading: false,
@@ -95,4 +97,4 @@ const itemsReducer = (state = initialState, action) => {
     }
 }
 
-export default itemsReducer;
+export default mediaReducer;

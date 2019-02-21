@@ -1,5 +1,5 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects';
-
+import { delay } from 'redux-saga';
 import { categories, createCategory, updateCategory, remove } from './categoryApi';
 
 import * as a from './categoryAction';
@@ -27,12 +27,13 @@ export function* index() {
 
         if (response) {
             console.log(response, `this is from client saga`);
-            yield put(a.getListSuccess(response.data))
+            yield put(a.getListSuccess(response.data.data))
         }
 
     }
-    catch (err) {
-        yield put(a.getListFail(err));
+    catch (error) {
+        console.log(error.response.data.message);
+        yield put(a.getListFail(error.response.data.message));
     }
 }
 
@@ -42,11 +43,13 @@ export function* create({ payload }) {
         const response = yield call(createCategory, payload);
         if (response) {
             console.log(response)
-            yield index()
+            yield call(delay, 2000)
             yield put(a.createSuccess());
+            yield index()
         }
     } catch (error) {
-        yield put(a.createFail(error))
+        console.log(error.response.data.message);
+        yield put(a.createFail(error.response.data.message))
     }
 }
 
@@ -55,11 +58,13 @@ export function* update({ payload }) {
     try {
         const response = yield call(updateCategory, payload);
         if (response) {
+            yield call(delay, 2000)
             yield put(a.updateSuccess())
             yield index()
         }
     } catch (error) {
-        yield put(a.updateFail(error))
+        console.log(error.response.data.message);
+        yield put(a.updateFail(error.response.data.message))
     }
 }
 
@@ -68,23 +73,23 @@ export function* deleteCategory({ payload }) {
     try {
         const response = yield call(remove, payload)
         if (response) {
+            yield call(delay, 2000)
             yield put(a.deleteSuccess())
             yield index()
         }
     } catch (error) {
-        console.log(error);
-        yield put(a.deleteFail(error))
+        console.log(error.response.data.message);
+        yield put(a.deleteFail(error.response.data.message))
+
     }
 }
 
 
-
-
 export default function* root() {
     yield all([
-        takeLatest(GET_ITEMS_LIST, index),
-        takeLatest(CREATE_ITEM, create),
-        takeLatest(UPDATE_ITEM, update),
-        takeLatest(DELETE_ITEM, remove)
+        takeLatest(GET_CATEGORIES_LIST, index),
+        takeLatest(CREATE_CATEGORY, create),
+        takeLatest(UPDATE_CATEGORY, update),
+        takeLatest(DELETE_CATEGORY, deleteCategory)
     ]);
 }

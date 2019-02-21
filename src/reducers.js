@@ -14,7 +14,10 @@ import profileReducer from './custom_modules/UserProfile/userProfileReducer';
 import projectReducer from './custom_modules/Projects/projectReducer';
 import orgainzationReducer from './custom_modules/Organization/orgReducer';
 import clientReducer from './custom_modules/Client/clientReducer'
-import ModalReducer from './views/components/Modal/modal.reducer';
+import mediaReducer from './custom_modules/Media/mediaReducer';
+import itemsReducer from './custom_modules/Items/itemsReducer';
+import categoryReducer from './custom_modules/Category/categoryReducer';
+import applicationReducer from './custom_modules/Application/appReducer';
 import { reducer as formReducer } from 'redux-form'
 
 const authPersistConfig = {
@@ -37,8 +40,12 @@ export default (history) => combineReducers({
     signupConfirmation: signupConfirmationReducer,
     profile: profileReducer,
     project: projectReducer,
-    organizations: orgainzationReducer,
-    clientReducer: clientReducer,
-    ModalReducer: ModalReducer,
+    // organizations: orgainzationReducer,
+    // clientReducer: clientReducer,
+    // ModalReducer: ModalReducer,
+    media: mediaReducer,
+    items: itemsReducer,
+    application: applicationReducer,
+    categories: categoryReducer,
 
 });

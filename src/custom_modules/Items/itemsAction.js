@@ -15,15 +15,15 @@ import {
 } from '../../modules/constants';
 
 //get Items
-export const getItems = (payload) => ({
+export const getList = (payload) => ({
     type: GET_ITEMS_LIST,
     payload
 })
-export const getItemsListSuccess = (payload) => ({
+export const getListSuccess = (payload) => ({
     type: GET_ITEMS_LIST_SUCCESS,
     payload
 })
-export const getItemsListFail = (payload) => ({
+export const getListFail = (payload) => ({
     type: GET_ITEMS_LIST_FAIL,
     payload
 })

@@ -15,7 +15,7 @@ import {
 
 const initialState = {
     loading: false,
-    errors: [],
+    errors: '',
     categories: [],
     done: false
 }
@@ -33,6 +33,7 @@ const categoryReducer = (state = initialState, action) => {
                 ...state,
                 loading: false,
                 categories: action.payload,
+                done: true,
             }
         case GET_CATEGORIES_LIST_FAIL:
             return {
@@ -66,7 +67,7 @@ const categoryReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
-                done: true
+                done: true,
             }
         case CREATE_CATEGORY_FAIL:
             return {
@@ -83,6 +84,7 @@ const categoryReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
+                done: true,
             }
         case DELETE_CATEGORY_FAIL:
             return {

@@ -67,6 +67,7 @@ import Dashboard from "./custom_modules/Dashboard";
 import Category from './custom_modules/Category';
 import Items from './custom_modules/Items';
 import Media from './custom_modules/Media';
+import Application from './custom_modules/Application';
 import ResetPassword from "./custom_modules/ResetPassword";
 import ChangePassword from "./custom_modules/ChangePassword";
 import VerifyUser from "./custom_modules/VerifyUser";
@@ -127,6 +128,13 @@ const routes = [
     name: "Media",
     icon: "nc-icon nc-bank",
     component: Media,
+    layout: "/admin"
+  },
+  {
+    path: "/application",
+    name: "Application",
+    icon: "nc-icon nc-bank",
+    component: Application,
     layout: "/admin"
   },
   {

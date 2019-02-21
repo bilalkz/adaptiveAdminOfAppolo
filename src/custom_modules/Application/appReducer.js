@@ -1,90 +1,92 @@
 import {
-    GET_ITEMS_LIST,
-    GET_ITEMS_LIST_SUCCESS,
-    GET_ITEMS_LIST_FAIL,
-    CREATE_ITEM,
-    CREATE_ITEM_SUCCESS,
-    CREATE_ITEM_FAIL,
-    UPDATE_ITEM,
-    UPDATE_ITEM_SUCCESS,
-    UPDATE_ITEM_FAIL,
-    DELETE_ITEM,
-    DELETE_ITEM_SUCCESS,
-    DELETE_ITEM_FAIL,
+    GET_APPLICATION_LIST,
+    GET_APPLICATION_LIST_SUCCESS,
+    GET_APPLICATION_LIST_FAIL,
+    CREATE_APPLICATION,
+    CREATE_APPLICATION_SUCCESS,
+    CREATE_APPLICATION_FAIL,
+    UPDATE_APPLICATION,
+    UPDATE_APPLICATION_SUCCESS,
+    UPDATE_APPLICATION_FAIL,
+    DELETE_APPLICATION,
+    DELETE_APPLICATION_SUCCESS,
+    DELETE_APPLICATION_FAIL,
 } from '../../modules/constants';
 
 const initialState = {
     loading: false,
     errors: '',
-    items: [],
+    applications: [],
     done: false
 }
 
-const itemsReducer = (state = initialState, action) => {
+const applicationReducer = (state = initialState, action) => {
     switch (action.type) {
-        case GET_ITEMS_LIST:
+        case GET_APPLICATION_LIST:
             return {
                 ...state,
                 loading: true,
+                done: false
             }
-        case GET_ITEMS_LIST_SUCCESS:
+        case GET_APPLICATION_LIST_SUCCESS:
             return {
                 ...state,
                 loading: false,
-                items: action.payload,
+                applications: action.payload,
+                done: true,
             }
-        case GET_ITEMS_LIST_FAIL:
+        case GET_APPLICATION_LIST_FAIL:
             return {
                 ...state,
                 loading: false,
                 errors: action.payload,
             }
-        case UPDATE_ITEM:
+        case UPDATE_APPLICATION:
             return {
                 ...state,
                 loading: true,
             }
-        case UPDATE_ITEM_SUCCESS:
+        case UPDATE_APPLICATION_SUCCESS:
             return {
                 ...state,
                 loading: false,
                 done: true
             }
-        case UPDATE_ITEM_FAIL:
+        case UPDATE_APPLICATION_FAIL:
             return {
                 ...state,
                 loading: false,
                 errors: action.payload,
             }
-        case CREATE_ITEM:
+        case CREATE_APPLICATION:
             return {
                 ...state,
                 loading: true,
             }
-        case CREATE_ITEM_SUCCESS:
-            return {
-                ...state,
-                loading: false,
-                done: true
-            }
-        case CREATE_ITEM_FAIL:
-            return {
-                ...state,
-                loading: false,
-                errors: action.payload,
-            }
-        case DELETE_ITEM:
-            return {
-                ...state,
-                loading: true,
-            }
-        case DELETE_ITEM_SUCCESS:
+        case CREATE_APPLICATION_SUCCESS:
             return {
                 ...state,
                 loading: false,
                 done: true,
             }
-        case DELETE_ITEM_FAIL:
+        case CREATE_APPLICATION_FAIL:
+            return {
+                ...state,
+                loading: false,
+                errors: action.payload,
+            }
+        case DELETE_APPLICATION:
+            return {
+                ...state,
+                loading: true,
+            }
+        case DELETE_APPLICATION_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                done: true,
+            }
+        case DELETE_APPLICATION_FAIL:
             return {
                 ...state,
                 loading: false,
@@ -95,4 +97,4 @@ const itemsReducer = (state = initialState, action) => {
     }
 }
 
-export default itemsReducer;
+export default applicationReducer;

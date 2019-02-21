@@ -95,13 +95,13 @@ class Sidebar extends React.Component {
       }
 
       {
-       if (prop.name === "Organization") {
-         return (
-         <div className="logo">
-        <h4 style={{ color: '#fff', fontSize: '12px', paddingLeft: '2px' }}>Admin</h4>
-        </div>
-      ) 
-      }
+        if (prop.name === "Organization") {
+          return (
+            <div className="logo">
+              <h4 style={{ color: '#fff', fontSize: '12px', paddingLeft: '2px' }}>Admin</h4>
+            </div>
+          )
+        }
       }
 
 
@@ -130,19 +130,19 @@ class Sidebar extends React.Component {
   };
   componentDidMount() {
     // if you are using a Windows Machine, the scrollbars will have a Mac look
-    if (navigator.platform.indexOf("Win") > -1) {
-      ps = new PerfectScrollbar(this.refs.sidebar, {
-        suppressScrollX: true,
-        suppressScrollY: false
-      });
-    }
+    // if (navigator.platform.indexOf("Win") > -1) {
+    //   ps = new PerfectScrollbar(this.refs.sidebar, {
+    //     suppressScrollX: true,
+    //     suppressScrollY: false
+    //   });
+    // }
   }
   componentWillUnmount() {
     // we need to destroy the false scrollbar when we navigate
     // to a page that doesn't have this component rendered
-    if (navigator.platform.indexOf("Win") > -1) {
-      ps.destroy();
-    }
+    // if (navigator.platform.indexOf("Win") > -1) {
+    //   ps.destroy();
+    // }
   }
   render() {
     const { auth } = this.props;
