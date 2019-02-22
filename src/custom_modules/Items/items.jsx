@@ -36,6 +36,8 @@ import { getList, update, create, deleteItem } from './itemsAction';
 import { getList as applicationList } from '../Application/appAction';
 import { getList as mediaList } from '../Media/mediaAction';
 import { getList as categoryList } from '../Category/categoryAction';
+import Select from 'react-select';
+
 
 import Loader from '../../modules/loader';
 
@@ -51,7 +53,8 @@ class Items extends React.Component {
     application_id: null,
     media_id: null,
     media_type: '',
-    category_id: null,
+    category_ids: null,
+    categoriesOptions: [],
     content: '',
     contentSource: '',
     categoryName: '',
@@ -64,6 +67,25 @@ class Items extends React.Component {
     searchTerm: '',
     searchLoading: false,
     loading: false,
+  }
+
+  options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' }
+  ];
+
+  optionBuilder = (categories) => {
+    const data = [];
+    categories.map((category, i) => {
+      data.push({ value: category.id, label: category.category_name })
+    })
+    this.setState({ categoriesOptions: data })
+  }
+
+  handleChangeMulti = (category_ids) => {
+    this.setState({ category_ids });
+    console.log(category_ids)
   }
 
   componentDidUpdate(prevProps) {
@@ -80,7 +102,8 @@ class Items extends React.Component {
           loading: this.props.loading,
           modalVisible: false,
           deleteModalVisible: false,
-        })
+        }, () => this.optionBuilder(this.state.categories)
+        )
       }
     }
   }
@@ -92,14 +115,6 @@ class Items extends React.Component {
     if (e.target.name === 'media_id') {
       this.checkType(e.target.value);
     }
-    // else if (e.target.name === "category_id") {
-    //   const { category_id } = this.state
-    //   this.state.category_id = this.state.category_id.concat(e.target.value)
-    //   this.setState({
-    //     category_id: category_id
-    //   })
-    // }
-
   }
 
   checkType = (id) => {
@@ -118,69 +133,32 @@ class Items extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-
-    const { id, content, media_type, contentSource, application_id, media_id, category_id } = this.state;
     const data = new FormData()
-
-    // console.log(data);
-
+    const { id, content, media_type, category_ids, contentSource, application_id, media_id } = this.state;
+    console.log(category_ids)
     if (this.state.editMode === false && this.state.deleteMode === false) {
-      // var arr = [];
-      // arr.push(application_id)
-
-      // if (media_type === 'mp3') {
-      //   data.append('audio_id', media_id)
-      // } else {
-      //   data.append('background_image_id', media_id);
-      // }
-      // data.append('content', content);
-      // data.append('content_source', contentSource);
-      // for (var i = 0; i < arr.length; i++) {
-      //   data.append('category_ids[]', arr[i]);
-      // }
-      // data.append('application_id', application_id)
-      // // data.append('category_ids', arr)
-
-      // const check = () => {
-      //   if (media_type === 'mp3') {
-      //     return {
-      //       audio_id: media_id
-      //     }
-
-      //   }
-      //   return { background_image_id: media_id }
-      // }
-
-      const key = media_type === 'mp3' ? 'audio_id' : 'background_image_id';
+      let key;
+      if (media_type) {
+        key = media_type === 'mp3' ? 'audio_id' : 'background_image_id';
+      }
       let obj = {
         content: content,
         content_source: contentSource,
         application_id: application_id,
-        category_ids: [category_id],
+        category_ids,
         [key]: media_id
       }
       this.props.create(obj)
     }
     else {
       if (this.state.editMode === true && this.state.deleteMode === false) {
-        // data.append('id', id)
-        // if (media_type === 'mp3') {
-        //   data.append('audio_id', media_id)
-        // } else {
-        //   data.append('background_image_id', media_id);
-        // }
-        // data.append('content', content);
-        // data.append('content_source', contentSource);
-        // data.append('application_id', application_id)
-        // data.append('category_ids[]', category_id)
-
         const key = media_type === 'mp3' ? 'audio_id' : 'background_image_id';
         let obj = {
           id,
           content: content,
           content_source: contentSource,
           application_id: application_id,
-          category_ids: [category_id],
+          category_ids,
           [key]: media_id
         }
         this.props.update(obj)
@@ -222,15 +200,20 @@ class Items extends React.Component {
   }
 
   editModal = (row) => {
-    const key = row.original.media_type === 'mp3' ? row.original.audio_id : row.original.background_image_id;
+    console.log(row);
+    let key
+    if (row.original.audio) {
+      key = row.original.audio.type === 'mp3' ? row.original.audio.id : row.original.background_image_id;
+    }
     this.setState({
       id: row.original.id,
       editMode: true,
       modalVisible: !this.state.modalVisible,
       content: row.original.content,
       contentSource: row.original.content_source,
-      application_id:row.original.application_id,
-      media_id:row.original.
+      application_id: row.original.application_id,
+      media_id: [key],
+      category_ids: row.original.categories,
     })
   }
 
@@ -239,7 +222,11 @@ class Items extends React.Component {
       modalVisible: !this.state.modalVisible,
       editMode: false,
       deleteMode: false,
-      name: '',
+      content: '',
+      contentSource: '',
+      application_id: null,
+      media_id: null,
+      category_ids: null,
     })
   }
 
@@ -270,7 +257,7 @@ class Items extends React.Component {
   render() {
     console.log(this.state.application_id)
     // const { media } = this.props;
-    const { deleteModalVisible, items, modalVisible, searchTerm, searchResult } = this.state;
+    const { deleteModalVisible, category_ids, items, modalVisible, searchTerm, searchResult } = this.state;
     console.log(items);
     console.log(modalVisible)
     console.log(deleteModalVisible)
@@ -324,16 +311,19 @@ class Items extends React.Component {
               </FormGroup>
               <FormGroup row>
                 <Label for="applicationType" sm={4}>Category Type</Label>
-                <Col sm={8}>
-                  <Input value={this.state.category_id} type="select" onChange={this.handleChange} style={{ marginTop: '0px' }} name="category_id" id="categoryType">
-                    <option>Select</option>
-                    {
-                      this.state.categories && this.state.categories.map((category, i) => (
-                        <option key={i} value={category.id}>{category.category_name}</option>
-                      ))
-                    }
 
-                  </Input>
+                <Col sm={8}>
+
+                  <Select
+                    isMulti
+                    name="category_ids"
+                    value={category_ids}
+                    onChange={this.handleChangeMulti}
+                    options={this.state.categoriesOptions}
+                    className="basic-multi-select"
+                    classNamePrefix="select"
+
+                  />
                 </Col>
               </FormGroup>
               <FormGroup row>
@@ -357,11 +347,11 @@ class Items extends React.Component {
         </Modal>
 
         <Modal backdrop={true} isOpen={deleteModalVisible} toggle={this.toggleDeleteModal} style={{ width: '100%' }} className='add-project-modal'>
-          <ModalHeader toggle={this.toggleDeleteModal}>delete Application</ModalHeader>
+          <ModalHeader toggle={this.toggleDeleteModal}>delete Item</ModalHeader>
           <ModalBody>
             <Form onSubmit={this.handleSubmit}>
               <FormGroup row>
-                <Label for="address" sm={10}>Are you sure you want to delete this Application <span style={{ color: 'red' }}>{this.state.name}</span> ?</Label>
+                <Label for="address" sm={10}>Are you sure you want to delete this Item <span style={{ color: 'red' }}>{this.state.content}</span> ?</Label>
               </FormGroup>
               <FormGroup row>
                 {this.props.errors
@@ -389,7 +379,7 @@ class Items extends React.Component {
 
             <Label><b>Applications List</b></Label>
             <Input onChange={(e) => this.handleSearchChange(e)} type="text" name="searchTerm" style={{ marginLeft: '10px', height: '36px', width: '30%', marginTop: '0px' }} placeholder="search" />
-            <Button className="btn-add" style={{ marginTop: '0px', borderRadius: '0' }} onClick={this.openModal}>Add Category</Button>
+            <Button className="btn-add" style={{ marginTop: '0px', borderRadius: '0' }} onClick={this.openModal}>Add Items</Button>
           </Row>
         </Container>
         <ReactTable
