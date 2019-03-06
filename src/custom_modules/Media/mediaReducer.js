@@ -11,13 +11,24 @@ import {
     DELETE_MEDIA,
     DELETE_MEDIA_SUCCESS,
     DELETE_MEDIA_FAIL,
+    GET_AUDIO_LIST,
+    GET_AUDIO_LIST_FAIL,
+    GET_AUDIO_LIST_SUCCESS,
+    GET_IMAGE_LIST,
+    GET_IMAGE_LIST_FAIL,
+    GET_IMAGE_LIST_SUCCESS,
 } from '../../modules/constants';
 
 const initialState = {
     loading: false,
-    errors: '',
+    errors: {},
     media: [],
-    done: false
+    audioList: [],
+    imageList: [],
+    done: false,
+    deleted: false,
+    updated: false,
+    created: false,
 }
 
 const mediaReducer = (state = initialState, action) => {
@@ -26,15 +37,57 @@ const mediaReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: true,
-                done: false
+                done: false,
+                deleted: false,
+                updated: false,
+                created: false,
             }
         case GET_MEDIA_LIST_SUCCESS:
             return {
                 ...state,
                 loading: false,
                 media: action.payload,
+                done: false,
             }
         case GET_MEDIA_LIST_FAIL:
+            return {
+                ...state,
+                loading: false,
+                errors: action.payload,
+            }
+        case GET_AUDIO_LIST:
+            return {
+                ...state,
+                loading: true,
+                done: false,
+            }
+        case GET_AUDIO_LIST_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                audioList: action.payload,
+                done: false,
+            }
+        case GET_AUDIO_LIST_FAIL:
+            return {
+                ...state,
+                loading: false,
+                errors: action.payload,
+            }
+        case GET_IMAGE_LIST:
+            return {
+                ...state,
+                loading: true,
+                done: false
+            }
+        case GET_IMAGE_LIST_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                imageList: action.payload,
+                done: false,
+            }
+        case GET_IMAGE_LIST_FAIL:
             return {
                 ...state,
                 loading: false,
@@ -49,7 +102,8 @@ const mediaReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
-                done: true
+                done: true,
+                updated: true,
             }
         case UPDATE_MEDIA_FAIL:
             return {
@@ -67,6 +121,7 @@ const mediaReducer = (state = initialState, action) => {
                 ...state,
                 loading: false,
                 done: true,
+                created: true,
             }
         case CREATE_MEDIA_FAIL:
             return {
@@ -85,6 +140,7 @@ const mediaReducer = (state = initialState, action) => {
                 ...state,
                 loading: false,
                 done: true,
+                deleted: true,
             }
         case DELETE_MEDIA_FAIL:
             return {

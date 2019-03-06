@@ -1,7 +1,7 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 
-import { index, createMedia, updateMedia, remove } from './mediaApi';
+import { index, createMedia, updateMedia, remove, audioIndex as audio, imageIndex as images } from './mediaApi';
 
 import * as a from './mediaAction';
 //Constants
@@ -18,6 +18,8 @@ import {
     DELETE_MEDIA,
     DELETE_MEDIA_SUCCESS,
     DELETE_MEDIA_FAIL,
+    GET_AUDIO_LIST,
+    GET_IMAGE_LIST,
 }
     from '../../modules/constants';
 
@@ -31,6 +33,31 @@ export function* mediaIndex() {
     catch (error) {
         console.log(error.response.data.message)
         yield put(a.getListFail(error.response.data.message));
+    }
+}
+
+//Handle audio request
+export function* audioIndex() {
+    try {
+        let response = yield call(audio);
+        console.log(response.data.data);
+        yield put(a.getAudioListSuccess(response.data.data))
+    }
+    catch (error) {
+        console.log(error.response.data.message)
+        yield put(a.getAudioListFail(error.response.data.message));
+    }
+}
+//Handle image request
+export function* imageIndex() {
+    try {
+        let response = yield call(images);
+        console.log(response.data.data);
+        yield put(a.getImageListSuccess(response.data.data))
+    }
+    catch (error) {
+        console.log(error.response.data.message)
+        yield put(a.getImageListFail(error.response.data.message));
     }
 }
 
@@ -86,6 +113,8 @@ export function* deleteMedia({ payload }) {
 export default function* root() {
     yield all([
         takeLatest(GET_MEDIA_LIST, mediaIndex),
+        takeLatest(GET_AUDIO_LIST, audioIndex),
+        takeLatest(GET_IMAGE_LIST, imageIndex),
         takeLatest(CREATE_MEDIA, create),
         takeLatest(UPDATE_MEDIA, update),
         takeLatest(DELETE_MEDIA, deleteMedia)

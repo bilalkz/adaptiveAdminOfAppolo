@@ -31,11 +31,21 @@ import {
 } from "reactstrap";
 
 import axios from 'axios';
-import classnames from 'classnames';
 import ReactTable from "react-table";
 import { connect } from 'react-redux';
 import { getList, update, create, deleteMEDIA } from './mediaAction';
 import Loader from '../../modules/loader';
+import { createNotification } from '../../modules/notificationManager';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
+const SignupSchema = Yup.object().shape({
+    fileName: Yup.string()
+        .min(2, 'Too Short!')
+        .max(50, 'Too Long!')
+        .required('Required'),
+});
+
 
 
 class Media extends React.Component {
@@ -54,6 +64,7 @@ class Media extends React.Component {
         searchLoading:false,
         deleteModalVisible:false,
         loading:false,
+        error:'',
         
     }
 
@@ -67,17 +78,44 @@ class Media extends React.Component {
                 this.setState({ 
                     media: this.props.media,
                     loading: this.props.loading,
-                    modalVisible: false,
-                    deleteModalVisible:false,
+                    error: this.props.errors,
                 })
+            }
+            if (prevProps.done === false && this.props.done === true) {
+                this.setState({
+                  modalVisible: false,
+                  deleteModalVisible: false,
+                  fileName:'',
+                  error:'',
+                })
+            }
+
+            if (prevProps.created === false && this.props.created === true) {
+                createNotification('success', 'Created Successfully', 3000)
+            }
+    
+            if (prevProps.updated === false && this.props.updated === true) {
+                createNotification('success', 'Updated Successfully', 3000)
+            }
+    
+            if (prevProps.deleted === false && this.props.deleted === true) {
+                createNotification('success', 'deleted Successfully', 3000)
             }
         }
     }
 
+    _onChange = (e) => {
+        const { value } = e.target;
+        this.setState({ fileName: value });
+    };
     
-      handleChange = (e) => {
-        this.setState({ [e.target.name]: e.target.value });
-      }
+    disabledReturn = (value) => {
+        console.log(value)
+        return value === '' ? true : false;
+    }
+    //   handleChange = (e) => {
+    //     this.setState({ [e.target.name]: e.target.value });
+    //   }
 
       handleselectedFile = event => {
         this.setState({
@@ -102,7 +140,7 @@ class Media extends React.Component {
         }
         else { 
             if(this.state.editMode === true && this.state.deleteMode === false) {
-                data.append('id',this.state.id)
+                data.append('id',id)
                 data.append('name', fileName);
                 data.append('file', selectedFile);
                 console.log(data);
@@ -124,6 +162,7 @@ class Media extends React.Component {
     editModal = (row) => {
         console.log(row);
         this.setState({
+          error:'',
           id: row.original.id,
           editMode: true,
           modalVisible: !this.state.modalVisible,
@@ -133,8 +172,10 @@ class Media extends React.Component {
 
     deleteModal = (row) => {
         this.setState({
+            error:'',
             id: row.original.id,
             deleteMode: true,
+            fileName: row.original.name,
             deleteModalVisible: !this.state.deleteModalVisible,
         })
     }
@@ -144,6 +185,7 @@ class Media extends React.Component {
           modalVisible: !this.state.modalVisible,
           editMode: false,
           fileName: '',
+          error:'',
         })
       }
 
@@ -152,6 +194,7 @@ class Media extends React.Component {
         this.setState({
             deleteModalVisible: !this.state.deleteModalVisible,
             deleteMode:false,
+            error:'',
         })
       }
     
@@ -196,38 +239,58 @@ class Media extends React.Component {
                 <Modal backdrop={true} isOpen={modalVisible} toggle={this.toggleModal} style={{ width: '100%' }} className='add-project-modal'>
                     <ModalHeader toggle={this.toggleModal}>Add Media</ModalHeader>
                     <ModalBody>
+                    <Formik
+
+validationSchema={SignupSchema}
+initialValues={{
+    fileName: '',
+}}
+>
+{({ errors, touched, handleChange, values, handleBlur }) => (
+    
                         <Form onSubmit={this.handleSubmit}>
                             <FormGroup row>
                                 <Label for="name" sm={4}>Name</Label>
                                 <Col sm={8}>
-                                    <Input type="text" value={this.state.fileName} onChange={this.handleChange} style={{ marginTop: '0px' }} name="fileName" id="fileName" placeholder="File Name" />
+                                    <Input type="text" value={this.state.fileName} onBlur={handleBlur} onChange={(e) => { handleChange(e); this._onChange(e) }}  style={{ marginTop: '0px' }} name="fileName" id="fileName" placeholder="File Name" />
+                                    {
+                                                errors.fileName
+                                                    ? <p style={{ color: 'red' }}>{errors.fileName}</p>
+                                                    : null
+                                    }
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
                                 <Label for="address" sm={4}>File</Label>
                                 <Col sm={8}>
                                     <label>Select File</label>
-                                    {/* <Input value={this.state.file} type="file" onChange={this.handleChange} style={{ marginTop: '0px' }} name="file" id="file" placeholder="file" /> */}
                                     <Input type="File" onChange={this.handleselectedFile} style={{ marginTop: '0px', opacity:'1' }} name="file" id="file" placeholder="file" />
-                                    <div> {Math.round(this.state.loaded,2) } %</div>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
-                                {this.props.errors 
+                                {this.state.error
                                   ? 
                                    <Fragment> <Label for="address" sm={4}>Errors</Label>
                                 <Col sm={8}>
-                                    <Label color="danger">{this.props.errors}</Label>
+                                    <Label className="text-danger">{this.state.error}</Label>
                                 </Col>
                                 </Fragment>
                                   : ''}
                             </FormGroup>
                             <FormGroup submit>
                                 <Col sm={{ size: 10, offset: 2 }}>
-                                    <Button>Submit</Button>
+                                {
+                                                this.state.editMode
+                                                    ?
+                                                    <Button disabled={errors.fileName}>Edit</Button>
+                                                    :
+                                                    <Button disabled={this.disabledReturn(values.fileName) || errors.fileName}>Submit</Button>
+                                            }
                                 </Col>
                             </FormGroup>
                         </Form>
+                        )}
+                        </Formik>
                     </ModalBody>
 
                 </Modal>
@@ -240,18 +303,18 @@ class Media extends React.Component {
                                 <Label for="address" sm={10}>Are you sure you want to delete this media <span style={{color:'red'}}>{this.state.fileName}</span> ?</Label>
                             </FormGroup>
                             <FormGroup row>
-                                {this.props.errors 
+                                {this.state.error
                                   ? 
                                    <Fragment> <Label for="address" sm={4}>Errors</Label>
                                 <Col sm={8}>
-                                    <Label color="danger">{this.props.errors}</Label>
+                                    <Label className="text-danger">{this.state.error}</Label>
                                 </Col>
                                 </Fragment>
                                   : ''}
                             </FormGroup>
                             <FormGroup submit>
                                 <Col sm={{ size: 10, offset: 2 }}>
-                                    <Button>Submit</Button>
+                                    <Button>Confirm</Button>
                                     <Button onClick={this.toggleDeleteModal}>Cancel</Button>
                                 </Col>
                             </FormGroup>
@@ -374,6 +437,9 @@ class Media extends React.Component {
 const mapStateToProps = (state) => ({
     media: state.media.media,
     done: state.media.done,
+    created: state.media.created,
+    updated: state.media.updated,
+    deleted: state.media.deleted,
     errors: state.media.errors,
     loading: state.media.loading,
 })

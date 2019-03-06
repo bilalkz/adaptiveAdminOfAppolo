@@ -50,7 +50,7 @@ export function* create({ payload }) {
         }
     } catch (error) {
         console.log(error.response.data.message);
-        yield put(a.createFail(error.response.data.message))
+        yield put(a.createFail(error.response.data))
     }
 }
 
@@ -65,7 +65,7 @@ export function* update({ payload }) {
         }
     } catch (error) {
         console.log(error.response.data.message);
-        yield put(a.updateFail(error.response.data.message))
+        yield put(a.updateFail(error.response.data))
     }
 }
 

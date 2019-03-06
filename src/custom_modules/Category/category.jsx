@@ -34,6 +34,16 @@ import ReactTable from "react-table";
 import { connect } from 'react-redux';
 import { getList, update, create, deleteCategory } from './categoryAction';
 import Loader from '../../modules/loader';
+import { createNotification } from '../../modules/notificationManager';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
+const SignupSchema = Yup.object().shape({
+    name: Yup.string()
+        .min(2, 'Too Short!')
+        .max(50, 'Too Long!')
+        .required('Required'),
+});
 
 
 
@@ -50,8 +60,13 @@ class Category extends React.Component {
         searchTerm: '',
         searchLoading: false,
         loading: false,
+        error: '',
     }
 
+    _onChange = (e) => {
+        const { value } = e.target;
+        this.setState({ name: value });
+    };
     componentDidUpdate(prevProps) {
         console.log(this.props)
         console.log(prevProps);
@@ -61,18 +76,37 @@ class Category extends React.Component {
                 this.setState({
                     categories: this.props.categories,
                     loading: this.props.loading,
-                    modalVisible: false,
-                    deleteModalVisible: false,
+                    error: this.props.errors,
                 })
             }
         }
+
+        if (prevProps.done === false && this.props.done === true) {
+            this.setState({
+                modalVisible: false,
+                deleteModalVisible: false,
+                name: '',
+            })
+        }
+
+        if (prevProps.created === false && this.props.created === true) {
+            createNotification('success', 'Created Successfully', 3000)
+        }
+
+        if (prevProps.updated === false && this.props.updated === true) {
+            createNotification('success', 'Updated Successfully', 3000)
+        }
+
+        if (prevProps.deleted === false && this.props.deleted === true) {
+            createNotification('success', 'deleted Successfully', 3000)
+        }
+
     }
 
-
-    handleChange = (e) => {
-        this.setState({ [e.target.name]: e.target.value });
+    disabledReturn = (value) => {
+        console.log(value)
+        return value === '' ? true : false;
     }
-
 
     handleSubmit = (e) => {
         e.preventDefault()
@@ -114,6 +148,7 @@ class Category extends React.Component {
         this.setState({
             deleteModalVisible: !this.state.deleteModalVisible,
             deleteMode: false,
+            error: '',
         })
     }
 
@@ -122,6 +157,7 @@ class Category extends React.Component {
             id: row.original.id,
             deleteMode: true,
             deleteModalVisible: !this.state.deleteModalVisible,
+            name: row.original.category_name,
         })
     }
 
@@ -140,6 +176,7 @@ class Category extends React.Component {
             editMode: false,
             deleteMode: false,
             name: '',
+            error: '',
         })
     }
 
@@ -180,29 +217,51 @@ class Category extends React.Component {
                 <Modal backdrop={true} isOpen={modalVisible} toggle={this.toggleModal} style={{ width: '100%' }} className='add-project-modal'>
                     <ModalHeader toggle={this.toggleModal}>Add category</ModalHeader>
                     <ModalBody>
-                        <Form onSubmit={this.handleSubmit}>
-                            <FormGroup row>
-                                <Label for="name" sm={4}>Name</Label>
-                                <Col sm={8}>
-                                    <Input type="text" value={this.state.name} onChange={this.handleChange} style={{ marginTop: '0px' }} name="name" id="fileName" placeholder="Category Name" />
-                                </Col>
-                            </FormGroup>
-                            <FormGroup row>
-                                {this.props.errors
-                                    ?
-                                    <Fragment> <Label for="errors" sm={4}>Errors</Label>
+                        <Formik
+
+                            validationSchema={SignupSchema}
+                            initialValues={{
+                                name: '',
+                            }}
+                        >
+                            {({ errors, handleChange, values, handleBlur }) => (
+
+                                <Form onSubmit={this.handleSubmit}>
+                                    <FormGroup row>
+                                        <Label for="name" sm={4}>Name</Label>
                                         <Col sm={8}>
-                                            <Label className="text-danger">{this.props.errors}</Label>
+                                            <Input type="text" value={this.state.name} onBlur={handleBlur} onChange={(e) => { handleChange(e); this._onChange(e) }} style={{ marginTop: '0px' }} name="name" id="fileName" placeholder="Category Name" />
+                                            {
+                                                errors.name
+                                                    ? <p style={{ color: 'red' }}>{errors.name}</p>
+                                                    : null
+                                            }
                                         </Col>
-                                    </Fragment>
-                                    : ''}
-                            </FormGroup>
-                            <FormGroup submit>
-                                <Col sm={{ size: 10, offset: 2 }}>
-                                    <Button>Submit</Button>
-                                </Col>
-                            </FormGroup>
-                        </Form>
+                                    </FormGroup>
+                                    <FormGroup row>
+                                        {this.state.error
+                                            ?
+                                            <Fragment> <Label for="errors" sm={4}>Errors</Label>
+                                                <Col sm={8}>
+                                                    <Label className="text-danger">{this.state.error}</Label>
+                                                </Col>
+                                            </Fragment>
+                                            : ''}
+                                    </FormGroup>
+                                    <FormGroup submit>
+                                        <Col sm={{ size: 10, offset: 2 }}>
+                                            {
+                                                this.state.editMode
+                                                    ?
+                                                    <Button disabled={errors.name}>Edit</Button>
+                                                    :
+                                                    <Button disabled={this.disabledReturn(values.name) || errors.name}>Submit</Button>
+                                            }
+                                        </Col>
+                                    </FormGroup>
+                                </Form>
+                            )}
+                        </Formik>
                     </ModalBody>
 
                 </Modal>
@@ -212,14 +271,14 @@ class Category extends React.Component {
                     <ModalBody>
                         <Form onSubmit={this.handleSubmit}>
                             <FormGroup row>
-                                <Label for="address" sm={10}>Are you sure you want to delete this Category <span style={{ color: 'red' }}>{this.state.fileName}</span> ?</Label>
+                                <Label for="address" sm={10}>Are you sure you want to delete this Category <span style={{ color: 'red' }}>{this.state.name}</span> ?</Label>
                             </FormGroup>
                             <FormGroup row>
-                                {this.props.errors
+                                {this.state.error
                                     ?
                                     <Fragment> <Label for="address" sm={4}>Errors</Label>
                                         <Col sm={8}>
-                                            <Label color="danger">{this.props.errors}</Label>
+                                            <Label className="text-danger">{this.state.error}</Label>
                                         </Col>
                                     </Fragment>
                                     : ''}
@@ -314,6 +373,9 @@ class Category extends React.Component {
 const mapStateToProps = (state) => ({
     categories: state.categories.categories,
     done: state.categories.done,
+    created: state.categories.created,
+    updated: state.categories.updated,
+    deleted: state.categories.deleted,
     errors: state.categories.errors,
     loading: state.categories.loading,
 })

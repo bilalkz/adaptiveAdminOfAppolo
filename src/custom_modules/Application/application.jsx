@@ -34,8 +34,16 @@ import ReactTable from "react-table";
 import { connect } from 'react-redux';
 import { getList, update, create, deleteAPPLICATION } from './appAction';
 import Loader from '../../modules/loader';
+import { createNotification } from '../../modules/notificationManager';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
-
+const SignupSchema = Yup.object().shape({
+    name: Yup.string()
+        .min(2, 'Too Short!')
+        .max(50, 'Too Long!')
+        .required('Required'),
+});
 
 class Application extends React.Component {
     state = {
@@ -50,7 +58,13 @@ class Application extends React.Component {
         searchTerm: '',
         searchLoading: false,
         loading: false,
+        error: '',
     }
+
+    _onChange = (e) => {
+        const { value } = e.target;
+        this.setState({ name: value });
+    };
 
     componentDidUpdate(prevProps) {
         console.log(this.props)
@@ -61,22 +75,46 @@ class Application extends React.Component {
                 this.setState({
                     applications: this.props.application,
                     loading: this.props.loading,
-                    modalVisible: false,
-                    deleteModalVisible: false,
+                    error: this.props.errors,
                 })
             }
+        }
+
+        if (prevProps.done === false && this.props.done === true) {
+            this.setState({
+                modalVisible: false,
+                deleteModalVisible: false,
+                name: '',
+            })
+        }
+
+        if (prevProps.created === false && this.props.created === true) {
+            createNotification('success', 'Created Successfully', 3000)
+        }
+
+        if (prevProps.updated === false && this.props.updated === true) {
+            createNotification('success', 'Updated Successfully', 3000)
+        }
+
+        if (prevProps.deleted === false && this.props.deleted === true) {
+            createNotification('success', 'deleted Successfully', 3000)
         }
     }
 
 
-    handleChange = (e) => {
-        this.setState({ [e.target.name]: e.target.value });
+    // handleChange = (e) => {
+    //     this.setState({ [e.target.name]: e.target.value });
+    // }
+
+    disabledReturn = (value) => {
+        console.log(value)
+        return value === '' ? true : false;
     }
 
 
     handleSubmit = (e) => {
         e.preventDefault()
-
+        console.log('handle submit')
         const { name, id } = this.state;
         const data = new FormData()
 
@@ -114,6 +152,7 @@ class Application extends React.Component {
         this.setState({
             deleteModalVisible: !this.state.deleteModalVisible,
             deleteMode: false,
+            name: '',
         })
     }
 
@@ -122,6 +161,7 @@ class Application extends React.Component {
             id: row.original.id,
             deleteMode: true,
             deleteModalVisible: !this.state.deleteModalVisible,
+            name: row.original.name,
         })
     }
 
@@ -140,6 +180,7 @@ class Application extends React.Component {
             editMode: false,
             deleteMode: false,
             name: '',
+            error: '',
         })
     }
 
@@ -180,30 +221,52 @@ class Application extends React.Component {
                 <Modal backdrop={true} isOpen={modalVisible} toggle={this.toggleModal} style={{ width: '100%' }} className='add-project-modal'>
                     <ModalHeader toggle={this.toggleModal}>Add Application</ModalHeader>
                     <ModalBody>
-                        <Form onSubmit={this.handleSubmit}>
-                            <FormGroup row>
-                                <Label for="name" sm={4}>Name</Label>
-                                <Col sm={8}>
-                                    <Input type="text" value={this.state.name} onChange={this.handleChange} style={{ marginTop: '0px' }} name="name" placeholder="Application Name" />
-                                </Col>
-                            </FormGroup>
-                            <FormGroup row>
-                                {this.props.errors
-                                    ?
-                                    <Fragment> <Label for="errors" sm={4}>Errors</Label>
+                        <Formik
+
+                            validationSchema={SignupSchema}
+                            initialValues={{
+                                name: '',
+                            }}
+                        >
+                            {({ errors, touched, handleChange, values, handleBlur }) => (
+                                <Form onSubmit={this.handleSubmit}>
+                                    <FormGroup row>
+                                        <Label for="name" sm={4}>Name</Label>
                                         <Col sm={8}>
-                                            <Label className="text-danger">{this.props.errors}</Label>
+                                            <Input type="text" value={this.state.name} onBlur={handleBlur} onChange={(e) => { handleChange(e); this._onChange(e) }} style={{ marginTop: '0px' }} name="name" placeholder="Application Name" />
+                                            {
+                                                errors.name
+                                                    ? <p style={{ color: 'red' }}>{errors.name}</p>
+                                                    : null
+                                            }
                                         </Col>
-                                    </Fragment>
-                                    : ''}
-                            </FormGroup>
-                            <FormGroup submit>
-                                <Col sm={{ size: 10, offset: 2 }}>
-                                    <Button>Submit</Button>
-                                </Col>
-                            </FormGroup>
-                        </Form>
+                                    </FormGroup>
+                                    <FormGroup row>
+                                        {this.state.error
+                                            ?
+                                            <Fragment> <Label for="errors" sm={4}>Errors</Label>
+                                                <Col sm={8}>
+                                                    <Label className="text-danger">{this.state.error}</Label>
+                                                </Col>
+                                            </Fragment>
+                                            : ''}
+                                    </FormGroup>
+                                    <FormGroup submit>
+                                        <Col sm={{ size: 10, offset: 2 }}>
+                                            {
+                                                this.state.editMode
+                                                    ?
+                                                    <Button disabled={errors.name}>Edit</Button>
+                                                    :
+                                                    <Button disabled={this.disabledReturn(values.name) || errors.name}>Submit</Button>
+                                            }
+                                        </Col>
+                                    </FormGroup>
+                                </Form>
+                            )}
+                        </Formik>
                     </ModalBody>
+
 
                 </Modal>
 
@@ -314,6 +377,9 @@ class Application extends React.Component {
 const mapStateToProps = (state) => ({
     application: state.application.applications,
     done: state.application.done,
+    created: state.application.created,
+    updated: state.application.updated,
+    deleted: state.application.deleted,
     errors: state.application.errors,
     loading: state.application.loading,
 })

@@ -17,7 +17,10 @@ const initialState = {
     loading: false,
     errors: '',
     categories: [],
-    done: false
+    done: false,
+    created: false,
+    updated: false,
+    deleted: false,
 }
 
 const categoryReducer = (state = initialState, action) => {
@@ -26,14 +29,19 @@ const categoryReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: true,
-                done: false
+                done: false,
+                errors: '',
+                created: false,
+                updated: false,
+                deleted: false,
             }
         case GET_CATEGORIES_LIST_SUCCESS:
             return {
                 ...state,
                 loading: false,
                 categories: action.payload,
-                done: true,
+                done: false,
+                errors: '',
             }
         case GET_CATEGORIES_LIST_FAIL:
             return {
@@ -50,7 +58,8 @@ const categoryReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
-                done: true
+                done: true,
+                updated: true,
             }
         case UPDATE_CATEGORY_FAIL:
             return {
@@ -68,6 +77,7 @@ const categoryReducer = (state = initialState, action) => {
                 ...state,
                 loading: false,
                 done: true,
+                created: true,
             }
         case CREATE_CATEGORY_FAIL:
             return {
@@ -85,6 +95,8 @@ const categoryReducer = (state = initialState, action) => {
                 ...state,
                 loading: false,
                 done: true,
+                deleted: true,
+
             }
         case DELETE_CATEGORY_FAIL:
             return {

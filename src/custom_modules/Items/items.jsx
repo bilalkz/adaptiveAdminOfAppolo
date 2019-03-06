@@ -34,13 +34,26 @@ import ReactTable from "react-table";
 import { connect } from 'react-redux';
 import { getList, update, create, deleteItem } from './itemsAction';
 import { getList as applicationList } from '../Application/appAction';
-import { getList as mediaList } from '../Media/mediaAction';
+import { getAudioList, getImageList } from '../Media/mediaAction';
 import { getList as categoryList } from '../Category/categoryAction';
 import Select from 'react-select';
-
-
+import { createNotification } from '../../modules/notificationManager';
+import { Formik, Field, Form as FormikForm } from 'formik';
+import * as Yup from 'yup';
 import Loader from '../../modules/loader';
 
+const SignupSchema = {
+  content: Yup.string()
+    .min(3, 'Too Short!')
+    .max(50, 'Too Long!')
+    .required('Required'),
+  contentSource: Yup.string()
+    .min(3, 'Too short!')
+    .max(50, 'Too Long!')
+    .required('Required'),
+  category_ids: Yup.array()
+    .required('Required'),
+};
 
 
 class Items extends React.Component {
@@ -48,12 +61,15 @@ class Items extends React.Component {
     id: null,
     items: [],
     applications: [],
-    media: [],
+    audios: [],
+    images: [],
     categories: [],
     application_id: null,
-    media_id: null,
+    image_id: null,
+    audio_id: null,
     media_type: '',
-    category_ids: null,
+    category_ids: [],
+    category_id: null,
     categoriesOptions: [],
     content: '',
     contentSource: '',
@@ -67,13 +83,18 @@ class Items extends React.Component {
     searchTerm: '',
     searchLoading: false,
     loading: false,
+    error: {},
   }
 
-  options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' }
-  ];
+  _onChange = (e) => {
+    const { value, name } = e.target;
+    this.setState({ [name]: value });
+  };
+
+  disabledReturn = (value, contentSource) => {
+    console.log(value)
+    return value === '' && contentSource === '' ? true : false;
+  }
 
   optionBuilder = (categories) => {
     const data = [];
@@ -83,9 +104,33 @@ class Items extends React.Component {
     this.setState({ categoriesOptions: data })
   }
 
+  seletecedOptionBuilder = (categories) => {
+
+    const data = categories.map((category, i) => {
+      console.log(category.category_name, category.id);
+      return { value: category.id, label: category.category_name }
+    })
+    this.state.category_ids = data
+  }
+
+  selectedOption = (categories) => {
+    const data = [];
+    categories.map((category, i) => {
+      data.push(category.value)
+    })
+    console.log(data);
+    this.setState({ category_id: data })
+  }
+
   handleChangeMulti = (category_ids) => {
+
     this.setState({ category_ids });
-    console.log(category_ids)
+    const data = [];
+    category_ids.map((category, i) => {
+      data.push(category.value)
+    })
+    console.log(data);
+    this.setState({ category_id: data })
   }
 
   componentDidUpdate(prevProps) {
@@ -93,28 +138,53 @@ class Items extends React.Component {
     console.log(prevProps);
     if (prevProps !== this.props) {
       if (this.props.items) {
-        console.log(this.props.items)
         this.setState({
           items: this.props.items,
           applications: this.props.applicationsListRedux,
           media: this.props.mediaListRedux,
+          audios: this.props.audioListRedux,
+          images: this.props.imageListRedux,
           categories: this.props.categoryListRedux,
           loading: this.props.loading,
-          modalVisible: false,
-          deleteModalVisible: false,
         }, () => this.optionBuilder(this.state.categories)
         )
       }
+
+      if (prevProps.created === false && this.props.created === true) {
+        createNotification('success', 'Created Successfully', 3000)
+      }
+
+      if (prevProps.updated === false && this.props.updated === true) {
+        createNotification('success', 'Updated Successfully', 3000)
+      }
+
+      if (prevProps.deleted === false && this.props.deleted === true) {
+        createNotification('success', 'deleted Successfully', 3000)
+      }
     }
+
+    if (prevProps.done === false && this.props.done === true) {
+      this.setState({
+        modalVisible: false,
+        deleteModalVisible: false,
+        content: '',
+        contentSource: '',
+        application_id: null,
+        image_id: null,
+        audio_id: null,
+        category_ids: null,
+      })
+    }
+
+    if (prevProps.errors === '' && this.props.errors !== '') {
+      this.setState({ error: this.props.errors })
+    }
+
   }
 
 
   handleChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
-
-    if (e.target.name === 'media_id') {
-      this.checkType(e.target.value);
-    }
   }
 
   checkType = (id) => {
@@ -134,33 +204,49 @@ class Items extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const data = new FormData()
-    const { id, content, media_type, category_ids, contentSource, application_id, media_id } = this.state;
-    console.log(category_ids)
+    const { id, content, category_id, contentSource, application_id, image_id, audio_id } = this.state;
     if (this.state.editMode === false && this.state.deleteMode === false) {
-      let key;
-      if (media_type) {
-        key = media_type === 'mp3' ? 'audio_id' : 'background_image_id';
-      }
       let obj = {
         content: content,
         content_source: contentSource,
         application_id: application_id,
-        category_ids,
-        [key]: media_id
+        category_ids: category_id,
+        background_image_id: image_id,
+        audio_id: audio_id,
       }
+
+      if (!application_id)
+        delete obj.application_id
+
+      if (!image_id)
+        delete obj.background_image_id
+
+      if (!audio_id)
+        delete obj.audio_id
+
       this.props.create(obj)
     }
     else {
       if (this.state.editMode === true && this.state.deleteMode === false) {
-        const key = media_type === 'mp3' ? 'audio_id' : 'background_image_id';
+        console.log(category_id)
         let obj = {
           id,
           content: content,
           content_source: contentSource,
           application_id: application_id,
-          category_ids,
-          [key]: media_id
+          category_ids: category_id,
+          background_image_id: image_id,
+          audio_id: audio_id,
         }
+        if (!application_id)
+          delete obj.application_id
+
+        if (!image_id)
+          delete obj.background_image_id
+
+        if (!audio_id)
+          delete obj.audio_id
+
         this.props.update(obj)
       }
     }
@@ -174,7 +260,8 @@ class Items extends React.Component {
   componentDidMount() {
     this.props.getList();
     this.props.applicationList();
-    this.props.mediaList();
+    this.props.audioList();
+    this.props.imageList();
     this.props.categoryList();
   }
 
@@ -188,32 +275,36 @@ class Items extends React.Component {
     this.setState({
       deleteModalVisible: !this.state.deleteModalVisible,
       deleteMode: false,
+      error: '',
+      content: '',
     })
   }
 
   deleteModal = (row) => {
     this.setState({
       id: row.original.id,
+      content: row.original.content,
       deleteMode: true,
       deleteModalVisible: !this.state.deleteModalVisible,
     })
   }
 
   editModal = (row) => {
-    console.log(row);
-    let key
-    if (row.original.audio) {
-      key = row.original.audio.type === 'mp3' ? row.original.audio.id : row.original.background_image_id;
-    }
+    this.seletecedOptionBuilder(row.original.categories);
+    const { category_ids } = this.state;
+    this.selectedOption(category_ids)
+    console.log(row.original)
     this.setState({
+      error: '',
       id: row.original.id,
       editMode: true,
       modalVisible: !this.state.modalVisible,
       content: row.original.content,
       contentSource: row.original.content_source,
       application_id: row.original.application_id,
-      media_id: [key],
-      category_ids: row.original.categories,
+      image_id: row.original.background_image_id,
+      audio_id: row.original.audio_id,
+      category_ids,
     })
   }
 
@@ -225,8 +316,11 @@ class Items extends React.Component {
       content: '',
       contentSource: '',
       application_id: null,
-      media_id: null,
+      image_id: null,
+      audio_id: null,
       category_ids: null,
+      category_id: null,
+      error: '',
     })
   }
 
@@ -244,9 +338,9 @@ class Items extends React.Component {
 
   handleSearch = () => {
     const regex = new RegExp(this.state.searchTerm, 'gi');
-    const searchResult = this.state.applications.reduce((acc, app) => {
-      if (app.name && app.name.match(regex)) {
-        acc.push(app);
+    const searchResult = this.state.items.reduce((acc, item) => {
+      if (item.content && item.content.match(regex)) {
+        acc.push(item);
       }
       return acc;
     }, [])
@@ -266,82 +360,145 @@ class Items extends React.Component {
       <div className="content">
         {this.state.loading ? <Loader /> : ''}
         <Modal backdrop={true} isOpen={modalVisible} toggle={this.toggleModal} style={{ width: '100%' }} className='add-project-modal'>
-          <ModalHeader toggle={this.toggleModal}>Add Application</ModalHeader>
+          {this.state.editMode
+            ? <ModalHeader toggle={this.toggleModal}>Edit item</ModalHeader>
+            : <ModalHeader toggle={this.toggleModal}>Add Item</ModalHeader>
+          }
           <ModalBody>
-            <Form onSubmit={this.handleSubmit}>
-              <FormGroup row>
-                <Label for="name" sm={4}>Content</Label>
-                <Col sm={8}>
-                  <Input type="text" value={this.state.content} onChange={this.handleChange} style={{ marginTop: '0px' }} name="content" placeholder="Content" />
-                </Col>
-              </FormGroup>
-              <FormGroup row>
-                <Label for="name" sm={4}>Source</Label>
-                <Col sm={8}>
-                  <Input type="text" value={this.state.contentSource} onChange={this.handleChange} style={{ marginTop: '0px' }} name="contentSource" placeholder="Source" />
-                </Col>
-              </FormGroup>
-              <FormGroup row>
-                <Label for="applicationType" sm={4}>Application Type</Label>
-                <Col sm={8}>
-                  <Input value={this.state.application_id} type="select" onChange={this.handleChange} style={{ marginTop: '0px' }} name="application_id" id="applicationType">
-                    <option>Select</option>
-                    {
-                      this.state.applications && this.state.applications.map((app, i) => (
-                        <option key={i} value={app.id}>{app.name}</option>
-                      ))
-                    }
+            <Formik
 
-                  </Input>
-                </Col>
-              </FormGroup>
-              <FormGroup row>
-                <Label for="applicationType" sm={4}>Media Type</Label>
-                <Col sm={8}>
-                  <Input value={this.state.media_id} type="select" onChange={this.handleChange} style={{ marginTop: '0px' }} name="media_id" id="mediaType">
-                    <option>Select</option>
-                    {
-                      this.state.media && this.state.media.map((media, i) => (
-                        <option key={i} value={media.id}>{media.name}</option>
-                      ))
-                    }
-
-                  </Input>
-                </Col>
-              </FormGroup>
-              <FormGroup row>
-                <Label for="applicationType" sm={4}>Category Type</Label>
-
-                <Col sm={8}>
-
-                  <Select
-                    isMulti
-                    name="category_ids"
-                    value={category_ids}
-                    onChange={this.handleChangeMulti}
-                    options={this.state.categoriesOptions}
-                    className="basic-multi-select"
-                    classNamePrefix="select"
-
-                  />
-                </Col>
-              </FormGroup>
-              <FormGroup row>
-                {this.props.errors
-                  ?
-                  <Fragment> <Label for="errors" sm={4}>Errors</Label>
+              initialValues={this.state.editMode
+                ? {
+                  content: this.state.content,
+                  contentSource: this.state.contentSource,
+                  category_ids: this.state.category_ids,
+                } : {
+                  content: '',
+                  contentSource: '',
+                  category_ids: [],
+                }}
+              validationSchema={Yup.object().shape(SignupSchema)}
+            >
+              {({ errors, touched, handleChange, values, handleBlur }) => {
+                console.log(errors, 'Seerat Ahmed Khan')
+                return < Form onSubmit={this.handleSubmit} >
+                  <FormGroup row>
+                    <Label for="name" sm={4}>Content</Label>
                     <Col sm={8}>
-                      <Label className="text-danger">{this.props.errors}</Label>
+                      <Input type="text" value={this.state.content} onBlur={handleBlur} onChange={(e) => { handleChange(e); this._onChange(e) }} style={{ marginTop: '0px' }} name="content" id="content" placeholder="Content" />
+                      {
+                        errors.content && touched.content
+                          ? <p style={{ color: 'red' }}>{errors.content}</p>
+                          : null
+                      }
                     </Col>
-                  </Fragment>
-                  : ''}
-              </FormGroup>
-              <FormGroup submit>
-                <Col sm={{ size: 10, offset: 2 }}>
-                  <Button>Submit</Button>
-                </Col>
-              </FormGroup>
-            </Form>
+                  </FormGroup>
+                  <FormGroup row>
+                    <Label for="name" sm={4}>Source</Label>
+                    <Col sm={8}>
+                      <Input type="text" value={this.state.contentSource} onBlur={handleBlur} onChange={(e) => { handleChange(e); this._onChange(e) }} style={{ marginTop: '0px' }} name="contentSource" id="contentSource" placeholder="Source" />
+                      {
+                        errors.contentSource && touched.contentSource
+                          ? <p style={{ color: 'red' }}>{errors.contentSource}</p>
+                          : null
+                      }
+                    </Col>
+                  </FormGroup>
+                  <FormGroup row>
+                    <Label for="applicationType" sm={4}>Application Type</Label>
+                    <Col sm={8}>
+                      <Input value={this.state.application_id} type="select" onChange={this.handleChange} style={{ marginTop: '0px' }} name="application_id" id="applicationType">
+                        <option>Select</option>
+                        {
+                          this.state.applications && this.state.applications.map((app, i) => (
+                            <option key={i} value={app.id}>{app.name}</option>
+                          ))
+                        }
+                      </Input>
+                    </Col>
+                  </FormGroup>
+                  <FormGroup row>
+                    <Label for="applicationType" sm={4}>Image</Label>
+                    <Col sm={8}>
+                      <Input value={this.state.image_id} type="select" onChange={this.handleChange} style={{ marginTop: '0px' }} name="image_id" id="imageType">
+                        <option>Select</option>
+                        {
+                          this.state.images && this.state.images.map((image, i) => (
+                            <option key={i} value={image.id}>{image.name}</option>
+                          ))
+                        }
+
+                      </Input>
+                    </Col>
+                  </FormGroup>
+                  <FormGroup row>
+                    <Label for="applicationType" sm={4}>Audio</Label>
+                    <Col sm={8}>
+                      <Input value={this.state.audio_id} type="select" onChange={this.handleChange} style={{ marginTop: '0px' }} name="audio_id" id="audioType">
+                        <option>Select</option>
+                        {
+                          this.state.audios && this.state.audios.map((audio, i) => (
+                            <option key={i} value={audio.id}>{audio.name}</option>
+                          ))
+                        }
+
+                      </Input>
+                    </Col>
+                  </FormGroup>
+                  <FormGroup row>
+                    <Label for="applicationType" sm={4}>Category Type</Label>
+
+                    <Col sm={8}>
+
+                      <Select
+                        isMulti
+                        name="category_ids"
+                        id="category_ids"
+                        value={category_ids}
+                        onChange={this.handleChangeMulti}
+                        options={this.state.categoriesOptions}
+                        className="basic-multi-select"
+                        classNamePrefix="select"
+                      />
+                      {
+                        errors.category_ids && touched.category_ids
+                          ? <p style={{ color: 'red' }}>{errors.category_ids}{console.log(errors.category_ids, `category_ids`)}</p>
+                          : null
+                      }
+
+                    </Col>
+                  </FormGroup>
+                  <FormGroup row>
+                    {this.state.error
+                      ?
+                      <Fragment> <Label for="errors" sm={4}>Errors</Label>
+                        <Col sm={8}>
+                          <Label className="text-danger">{this.state.error.message}</Label>
+                          {this.state.error.errors ? this.state.error.errors.category_ids.map(error => (
+                            <Label className="text-danger">{error}</Label>
+                          )) : null}
+                        </Col>
+                      </Fragment>
+                      :
+                      ''
+                    }
+                  </FormGroup>
+                  <FormGroup submit>
+                    <Col sm={{ size: 10, offset: 2 }}>
+                      {
+                        this.state.editMode
+                          ?
+                          <Button disabled={errors.content || errors.contentSource}>Update</Button>
+                          :
+                          <Button disabled={this.disabledReturn(values.content, values.contentSource) || errors.content || errors.contentSource}>Submit</Button>
+                      }
+
+                    </Col>
+                  </FormGroup>
+                </Form>
+              }}
+            </Formik>
+
           </ModalBody>
 
         </Modal>
@@ -354,11 +511,11 @@ class Items extends React.Component {
                 <Label for="address" sm={10}>Are you sure you want to delete this Item <span style={{ color: 'red' }}>{this.state.content}</span> ?</Label>
               </FormGroup>
               <FormGroup row>
-                {this.props.errors
+                {this.state.error
                   ?
                   <Fragment> <Label for="address" sm={4}>Errors</Label>
                     <Col sm={8}>
-                      <Label color="danger">{this.props.errors}</Label>
+                      <Label className="text-danger">{this.state.error}</Label>
                     </Col>
                   </Fragment>
                   : ''}
@@ -377,7 +534,7 @@ class Items extends React.Component {
         <Container>
           <Row className="tabs-container">
 
-            <Label><b>Applications List</b></Label>
+            <Label><b>Items List</b></Label>
             <Input onChange={(e) => this.handleSearchChange(e)} type="text" name="searchTerm" style={{ marginLeft: '10px', height: '36px', width: '30%', marginTop: '0px' }} placeholder="search" />
             <Button className="btn-add" style={{ marginTop: '0px', borderRadius: '0' }} onClick={this.openModal}>Add Items</Button>
           </Row>
@@ -428,12 +585,12 @@ class Items extends React.Component {
               ),
               headerClassName: 'text-center',
               sortable: false,
-              accessor: "categories[0].category_name",
+              accessor: "categories",
               Cell: row =>
                 (
                   <div className='text-center'>
                     <span className='text-center'>
-                      {row.value}{console.log(row.value)}
+                      {row.value.map(category => (<span>{category.category_name}, </span>))}
                     </span>
                   </div>
                 )
@@ -459,12 +616,29 @@ class Items extends React.Component {
             {
               Header: () => (
                 <span className='table-header-style'>
-                  Media
+                  Audio
                 </span>
               ),
               headerClassName: 'text-center',
               sortable: false,
-              accessor: "background_image[0].path",
+              accessor: "audio.name",
+              Cell: row => (
+                <div className='text-center'>
+                  <span className='text-center'>
+                    {row.value}
+                  </span>
+                </div>
+              )
+            },
+            {
+              Header: () => (
+                <span className='table-header-style'>
+                  Image
+                </span>
+              ),
+              headerClassName: 'text-center',
+              sortable: false,
+              accessor: "background_image.name",
               Cell: row => (
                 <div className='text-center'>
                   <span className='text-center'>
@@ -505,11 +679,15 @@ class Items extends React.Component {
 
 const mapStateToProps = (state) => ({
   items: state.items.items,
-  done: state.application.done,
-  errors: state.application.errors,
-  loading: state.application.loading,
+  done: state.items.done,
+  errors: state.items.errors,
+  loading: state.items.loading,
+  updated: state.items.updated,
+  created: state.items.created,
+  deleted: state.items.deleted,
   applicationsListRedux: state.application.applications,
-  mediaListRedux: state.media.media,
+  imageListRedux: state.media.imageList,
+  audioListRedux: state.media.audioList,
   categoryListRedux: state.categories.categories,
 
 })
@@ -517,12 +695,12 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   getList: () => { dispatch(getList()) },
   applicationList: () => { dispatch(applicationList()) },
-  mediaList: () => { dispatch(mediaList()) },
+  imageList: () => { dispatch(getImageList()) },
+  audioList: () => { dispatch(getAudioList()) },
   categoryList: () => { dispatch(categoryList()) },
   update: (payload) => { dispatch(update(payload)) },
   create: (payload) => { dispatch(create(payload)) },
   delete: (payload) => { dispatch(deleteItem(payload)) }
-  // search: () => { dispatch() }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Items);

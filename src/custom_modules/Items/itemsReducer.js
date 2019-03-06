@@ -17,7 +17,11 @@ const initialState = {
     loading: false,
     errors: '',
     items: [],
-    done: false
+    done: false,
+    updated: false,
+    created: false,
+    deleted: false,
+
 }
 
 const itemsReducer = (state = initialState, action) => {
@@ -26,18 +30,24 @@ const itemsReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: true,
+                done: false,
+                updated: false,
+                created: false,
+                deleted: false,
             }
         case GET_ITEMS_LIST_SUCCESS:
             return {
                 ...state,
                 loading: false,
                 items: action.payload,
+                done: false,
             }
         case GET_ITEMS_LIST_FAIL:
             return {
                 ...state,
                 loading: false,
                 errors: action.payload,
+                done: false,
             }
         case UPDATE_ITEM:
             return {
@@ -48,7 +58,8 @@ const itemsReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
-                done: true
+                done: true,
+                updated: true,
             }
         case UPDATE_ITEM_FAIL:
             return {
@@ -65,7 +76,8 @@ const itemsReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
-                done: true
+                done: true,
+                created: true,
             }
         case CREATE_ITEM_FAIL:
             return {
@@ -83,6 +95,7 @@ const itemsReducer = (state = initialState, action) => {
                 ...state,
                 loading: false,
                 done: true,
+                deleted: true,
             }
         case DELETE_ITEM_FAIL:
             return {

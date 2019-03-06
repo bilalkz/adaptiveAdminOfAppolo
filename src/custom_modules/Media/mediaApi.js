@@ -24,6 +24,28 @@ export function index() {
   })
 }
 
+export function audioIndex() {
+  return axios.get(`${BaseURL}/list_by_audio`, {
+    withCredentials: false,
+    mode: "no-cors",
+    method: "GET",
+    headers: {
+      "Accept": "application/json"
+    }
+  })
+}
+
+export function imageIndex() {
+  return axios.get(`${BaseURL}/list_by_image`, {
+    withCredentials: false,
+    mode: "no-cors",
+    method: "GET",
+    headers: {
+      "Accept": "application/json"
+    }
+  })
+}
+
 // export function mediaList() {
 //   return axios.get(`${BaseURL}/list_all`)
 // }

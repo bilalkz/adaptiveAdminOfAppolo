@@ -11,6 +11,12 @@ import {
     DELETE_MEDIA,
     DELETE_MEDIA_SUCCESS,
     DELETE_MEDIA_FAIL,
+    GET_AUDIO_LIST,
+    GET_AUDIO_LIST_FAIL,
+    GET_AUDIO_LIST_SUCCESS,
+    GET_IMAGE_LIST,
+    GET_IMAGE_LIST_FAIL,
+    GET_IMAGE_LIST_SUCCESS,
 
 } from '../../modules/constants';
 
@@ -28,6 +34,33 @@ export const getListFail = (payload) => ({
     payload
 })
 
+//get audio list
+export const getAudioList = (payload) => ({
+    type: GET_AUDIO_LIST,
+    payload,
+})
+export const getAudioListSuccess = (payload) => ({
+    type: GET_AUDIO_LIST_SUCCESS,
+    payload
+})
+export const getAudioListFail = (payload) => ({
+    type: GET_AUDIO_LIST_FAIL,
+    payload
+})
+
+//get image list
+export const getImageList = (payload) => ({
+    type: GET_IMAGE_LIST,
+    payload,
+})
+export const getImageListSuccess = (payload) => ({
+    type: GET_IMAGE_LIST_SUCCESS,
+    payload
+})
+export const getImageListFail = (payload) => ({
+    type: GET_IMAGE_LIST_FAIL,
+    payload
+})
 
 //create MEDIAS
 export const create = (payload) => ({
