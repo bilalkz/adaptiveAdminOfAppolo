@@ -102,13 +102,13 @@ const routes = [
   //         layout: "/auth",
   //         redirect:true
   //       },
-  {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: "nc-icon nc-bank",
-    component: Dashboard,
-    layout: "/admin"
-  },
+  // {
+  //   path: "/dashboard",
+  //   name: "Dashboard",
+  //   icon: "nc-icon nc-bank",
+  //   component: Dashboard,
+  //   layout: "/admin"
+  // },
   {
     path: "/items",
     name: "Items",
@@ -185,199 +185,199 @@ const routes = [
     layout: "/admin",
     redirect: true
   },
-  {
-    collapse: true,
-    name: "Activity",
-    icon: "nc-icon nc-book-bookmark",
-    state: "activityCollapse",
-    views: [
-      {
-        path: "/activity/screenshots",
-        name: "Screenshots",
-        mini: "S",
-        component: ActivityScreenshots,
-        layout: "/admin",
-      },
-      {
-        path: "/activity/apps",
-        name: "Apps",
-        mini: "A",
-        component: ActivityApps,
-        layout: "/admin"
-      },
-      {
-        path: "/activity/urls",
-        name: "URLs",
-        mini: "U",
-        component: ActivityURLs,
-        layout: "/admin"
-      },
-      {
-        path: "/activity/locations",
-        name: "Locations",
-        mini: "L",
-        component: ActivityLocations,
-        layout: "/admin"
-      }
-    ]
-  },
-  {
-    collapse: true,
-    name: "Timesheets",
-    icon: "nc-icon nc-book-bookmark",
-    state: "timesheetCollapse",
-    views: [
-      {
-        path: "/timesheet/daily",
-        name: "Daily",
-        mini: "D",
-        component: TimesheetDaily,
-        layout: "/admin"
-      },
-      {
-        path: "/timesheet/weekly",
-        name: "Weekly",
-        mini: "W",
-        component: TimesheetWeekly,
-        layout: "/admin"
-      },
-      {
-        path: "/timesheet/calendar",
-        name: "Calendar",
-        mini: "C",
-        component: TimesheetCalendar,
-        layout: "/admin"
-      },
-      {
-        path: "/timesheet/approvals",
-        name: "Approvals",
-        mini: "AP",
-        component: TimesheetApprovals,
-        layout: "/admin"
-      }
-    ]
-  },
-  {
-    collapse: true,
-    name: "Reports",
-    icon: "nc-icon nc-book-bookmark",
-    state: "reportsCollapse",
-    views: [
-      {
-        path: "/reports/weekly",
-        name: "Weekly",
-        mini: "RW",
-        component: ReportsWeekly,
-        layout: "/admin"
-      },
-      {
-        path: "/reports/time-activities",
-        name: "Time & activities",
-        mini: "TA",
-        component: ReportsTimeActivities,
-        layout: "/admin"
-      },
-      {
-        path: "/reports/apps-urls",
-        name: "Apps & URLs",
-        mini: "AU",
-        component: ReportsAppsUrls,
-        layout: "/admin"
-      },
-      {
-        path: "/reports/manual-time-edits",
-        name: "Manual time edits",
-        mini: "MT",
-        component: ReportsManualTimeEdit,
-        layout: "/admin"
-      },
-      {
-        path: "/reports/accounts-owned",
-        name: "Accounts owned",
-        mini: "AO",
-        component: ReportsAccountsOwned,
-        layout: "/admin"
-      },
-      {
-        path: "/reports/payments",
-        name: "Payments",
-        mini: "P",
-        component: ReportsPayments,
-        layout: "/admin"
-      },
-      {
-        path: "/reports/view-reports",
-        name: "View all reports",
-        mini: "VR",
-        component: ReportsViewReports,
-        layout: "/admin"
-      },
-    ]
-  },
-  {
-    path: "/projects",
-    name: "Projects",
-    icon: "nc-icon nc-bank",
-    component: Projects,
-    layout: "/admin"
-  },
-  {
-    path: "/tasks",
-    name: "Tasks",
-    icon: "nc-icon nc-bank",
-    component: Tasks,
-    layout: "/admin"
-  },
-  {
-    path: "/invoices",
-    name: "Invoices",
-    icon: "nc-icon nc-bank",
-    component: Invoices,
-    layout: "/admin"
-  },
-  {
-    path: "/schedules",
-    name: "Schedules",
-    icon: "fa fa-plus",
-    component: Schedules,
-    layout: "/admin"
-  },
-  {
-    path: "/time-off",
-    name: "Time off",
-    icon: "nc-icon nc-bank",
-    component: TimeOff,
-    layout: "/admin"
-  },
-  {
-    path: "/user-profile",
-    name: "UserProfile",
-    mini: "UP",
-    component: UserProfile,
-    layout: "/admin",
-    redirect: true
-  },
-  {
-    path: "/organization",
-    name: "Organization",
-    icon: "nc-icon nc-calendar-60",
-    component: Organization,
-    layout: "/admin"
-  },
-  {
-    path: "/organization",
-    name: "organization",
-    icon: "nc-icon nc-calendar-60",
-    component: Organization,
-    layout: "/admin"
-  },
-  {
-    path: "/client",
-    name: "Client",
-    icon: "nc-icon nc-calendar-60",
-    component: Client,
-    layout: "/admin"
-  },
+  // {
+  //   collapse: true,
+  //   name: "Activity",
+  //   icon: "nc-icon nc-book-bookmark",
+  //   state: "activityCollapse",
+  //   views: [
+  //     {
+  //       path: "/activity/screenshots",
+  //       name: "Screenshots",
+  //       mini: "S",
+  //       component: ActivityScreenshots,
+  //       layout: "/admin",
+  //     },
+  //     {
+  //       path: "/activity/apps",
+  //       name: "Apps",
+  //       mini: "A",
+  //       component: ActivityApps,
+  //       layout: "/admin"
+  //     },
+  //     {
+  //       path: "/activity/urls",
+  //       name: "URLs",
+  //       mini: "U",
+  //       component: ActivityURLs,
+  //       layout: "/admin"
+  //     },
+  //     {
+  //       path: "/activity/locations",
+  //       name: "Locations",
+  //       mini: "L",
+  //       component: ActivityLocations,
+  //       layout: "/admin"
+  //     }
+  //   ]
+  // },
+  // {
+  //   collapse: true,
+  //   name: "Timesheets",
+  //   icon: "nc-icon nc-book-bookmark",
+  //   state: "timesheetCollapse",
+  //   views: [
+  //     {
+  //       path: "/timesheet/daily",
+  //       name: "Daily",
+  //       mini: "D",
+  //       component: TimesheetDaily,
+  //       layout: "/admin"
+  //     },
+  //     {
+  //       path: "/timesheet/weekly",
+  //       name: "Weekly",
+  //       mini: "W",
+  //       component: TimesheetWeekly,
+  //       layout: "/admin"
+  //     },
+  //     {
+  //       path: "/timesheet/calendar",
+  //       name: "Calendar",
+  //       mini: "C",
+  //       component: TimesheetCalendar,
+  //       layout: "/admin"
+  //     },
+  //     {
+  //       path: "/timesheet/approvals",
+  //       name: "Approvals",
+  //       mini: "AP",
+  //       component: TimesheetApprovals,
+  //       layout: "/admin"
+  //     }
+  //   ]
+  // },
+  // {
+  //   collapse: true,
+  //   name: "Reports",
+  //   icon: "nc-icon nc-book-bookmark",
+  //   state: "reportsCollapse",
+  //   views: [
+  //     {
+  //       path: "/reports/weekly",
+  //       name: "Weekly",
+  //       mini: "RW",
+  //       component: ReportsWeekly,
+  //       layout: "/admin"
+  //     },
+  //     {
+  //       path: "/reports/time-activities",
+  //       name: "Time & activities",
+  //       mini: "TA",
+  //       component: ReportsTimeActivities,
+  //       layout: "/admin"
+  //     },
+  //     {
+  //       path: "/reports/apps-urls",
+  //       name: "Apps & URLs",
+  //       mini: "AU",
+  //       component: ReportsAppsUrls,
+  //       layout: "/admin"
+  //     },
+  //     {
+  //       path: "/reports/manual-time-edits",
+  //       name: "Manual time edits",
+  //       mini: "MT",
+  //       component: ReportsManualTimeEdit,
+  //       layout: "/admin"
+  //     },
+  //     {
+  //       path: "/reports/accounts-owned",
+  //       name: "Accounts owned",
+  //       mini: "AO",
+  //       component: ReportsAccountsOwned,
+  //       layout: "/admin"
+  //     },
+  //     {
+  //       path: "/reports/payments",
+  //       name: "Payments",
+  //       mini: "P",
+  //       component: ReportsPayments,
+  //       layout: "/admin"
+  //     },
+  //     {
+  //       path: "/reports/view-reports",
+  //       name: "View all reports",
+  //       mini: "VR",
+  //       component: ReportsViewReports,
+  //       layout: "/admin"
+  //     },
+  //   ]
+  // },
+  // {
+  //   path: "/projects",
+  //   name: "Projects",
+  //   icon: "nc-icon nc-bank",
+  //   component: Projects,
+  //   layout: "/admin"
+  // },
+  // {
+  //   path: "/tasks",
+  //   name: "Tasks",
+  //   icon: "nc-icon nc-bank",
+  //   component: Tasks,
+  //   layout: "/admin"
+  // },
+  // {
+  //   path: "/invoices",
+  //   name: "Invoices",
+  //   icon: "nc-icon nc-bank",
+  //   component: Invoices,
+  //   layout: "/admin"
+  // },
+  // {
+  //   path: "/schedules",
+  //   name: "Schedules",
+  //   icon: "fa fa-plus",
+  //   component: Schedules,
+  //   layout: "/admin"
+  // },
+  // {
+  //   path: "/time-off",
+  //   name: "Time off",
+  //   icon: "nc-icon nc-bank",
+  //   component: TimeOff,
+  //   layout: "/admin"
+  // },
+  // {
+  //   path: "/user-profile",
+  //   name: "UserProfile",
+  //   mini: "UP",
+  //   component: UserProfile,
+  //   layout: "/admin",
+  //   redirect: true
+  // },
+  // {
+  //   path: "/organization",
+  //   name: "Organization",
+  //   icon: "nc-icon nc-calendar-60",
+  //   component: Organization,
+  //   layout: "/admin"
+  // },
+  // {
+  //   path: "/organization",
+  //   name: "organization",
+  //   icon: "nc-icon nc-calendar-60",
+  //   component: Organization,
+  //   layout: "/admin"
+  // },
+  // {
+  //   path: "/client",
+  //   name: "Client",
+  //   icon: "nc-icon nc-calendar-60",
+  //   component: Client,
+  //   layout: "/admin"
+  // },
   // {
   //   collapse: true,
   //   name: "Pages",
