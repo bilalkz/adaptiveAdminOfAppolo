@@ -45,11 +45,9 @@ import Loader from '../../modules/loader';
 const SignupSchema = {
   content: Yup.string()
     .min(3, 'Too Short!')
-    .max(50, 'Too Long!')
     .required('Required'),
   contentSource: Yup.string()
     .min(3, 'Too short!')
-    .max(50, 'Too Long!')
     .required('Required'),
   category_ids: Yup.array()
     .required('Required'),
@@ -83,7 +81,7 @@ class Items extends React.Component {
     searchTerm: '',
     searchLoading: false,
     loading: false,
-    error: {},
+    error: '',
   }
 
   _onChange = (e) => {
@@ -173,6 +171,8 @@ class Items extends React.Component {
         image_id: null,
         audio_id: null,
         category_ids: null,
+        deleteMode: false,
+        editMode: false,
       })
     }
 
@@ -251,7 +251,7 @@ class Items extends React.Component {
       }
     }
 
-    if (this.state.deleteMode === true) {
+    if (this.state.deleteMode === true && this.state.editMode === false) {
       data.append('id', this.state.id)
       this.props.delete(data)
     }
@@ -285,7 +285,8 @@ class Items extends React.Component {
       id: row.original.id,
       content: row.original.content,
       deleteMode: true,
-      deleteModalVisible: !this.state.deleteModalVisible,
+      editMode: false,
+      deleteModalVisible: true,
     })
   }
 
@@ -515,7 +516,7 @@ class Items extends React.Component {
                   ?
                   <Fragment> <Label for="address" sm={4}>Errors</Label>
                     <Col sm={8}>
-                      <Label className="text-danger">{this.state.error}</Label>
+                      {/* <Label className="text-danger">{this.state.error}</Label> */}
                     </Col>
                   </Fragment>
                   : ''}

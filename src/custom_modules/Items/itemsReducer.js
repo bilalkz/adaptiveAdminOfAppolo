@@ -31,16 +31,16 @@ const itemsReducer = (state = initialState, action) => {
                 ...state,
                 loading: true,
                 done: false,
-                updated: false,
-                created: false,
-                deleted: false,
             }
         case GET_ITEMS_LIST_SUCCESS:
             return {
                 ...state,
+                done: false,
                 loading: false,
                 items: action.payload,
-                done: false,
+                updated: false,
+                created: false,
+                deleted: false,
             }
         case GET_ITEMS_LIST_FAIL:
             return {
