@@ -137,54 +137,54 @@ const routes = [
     component: Application,
     layout: "/admin"
   },
-  {
-    path: "/api/reset_password/:confirmation_key",
-    name: "ResetPassword",
-    mini: "RP",
-    component: ResetPassword,
-    layout: "/auth",
-    redirect: true
-  },
-  {
-    path: "/api/verify_user/:id",
-    name: "VerifyUser",
-    mini: "VU",
-    component: VerifyUser,
-    layout: "/auth",
-    redirect: true
-  },
-  {
-    path: "/api/invitation_signup/:id",
-    name: "invitationSignup",
-    mini: "IS",
-    component: SignUpConfirmation,
-    layout: "/auth",
-    redirect: true
-  },
-  {
-    path: "/change-password",
-    name: "ChangePassword",
-    mini: "RP",
-    component: ChangePassword,
-    layout: "/admin",
-    redirect: true
-  },
-  {
-    path: "/my-profile",
-    name: "Profile",
-    mini: "P",
-    component: UserProfile,
-    layout: "/admin",
-    redirect: true
-  },
-  {
-    path: "/my-account",
-    name: "Account",
-    mini: "AC",
-    component: MyAccount,
-    layout: "/admin",
-    redirect: true
-  },
+  // {
+  //   path: "/api/reset_password/:confirmation_key",
+  //   name: "ResetPassword",
+  //   mini: "RP",
+  //   component: ResetPassword,
+  //   layout: "/auth",
+  //   redirect: true
+  // },
+  // {
+  //   path: "/api/verify_user/:id",
+  //   name: "VerifyUser",
+  //   mini: "VU",
+  //   component: VerifyUser,
+  //   layout: "/auth",
+  //   redirect: true
+  // },
+  // {
+  //   path: "/api/invitation_signup/:id",
+  //   name: "invitationSignup",
+  //   mini: "IS",
+  //   component: SignUpConfirmation,
+  //   layout: "/auth",
+  //   redirect: true
+  // },
+  // {
+  //   path: "/change-password",
+  //   name: "ChangePassword",
+  //   mini: "RP",
+  //   component: ChangePassword,
+  //   layout: "/admin",
+  //   redirect: true
+  // },
+  // {
+  //   path: "/my-profile",
+  //   name: "Profile",
+  //   mini: "P",
+  //   component: UserProfile,
+  //   layout: "/admin",
+  //   redirect: true
+  // },
+  // {
+  //   path: "/my-account",
+  //   name: "Account",
+  //   mini: "AC",
+  //   component: MyAccount,
+  //   layout: "/admin",
+  //   redirect: true
+  // },
   // {
   //   collapse: true,
   //   name: "Activity",
